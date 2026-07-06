@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Libreta Digital VDC 360</title>
+<style>
+  :root{
+    --rojo:#8b1e1e;
+    --rojo2:#b52b2b;
+    --fondo:#f4f1ea;
+    --papel:#fffdf7;
+    --linea:#d7d0c3;
+    --texto:#222;
+    --gris:#666;
+    --verde:#137a3a;
+    --azul:#1f4f8f;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--fondo);
+    color:var(--texto);
+  }
+  header{
+    background:linear-gradient(135deg,var(--rojo),var(--rojo2));
+    color:#fff;
+    padding:14px 18px;
+    position:sticky;
+    top:0;
+    z-index:10;
+    box-shadow:0 2px 10px rgba(0,0,0,.18);
+  }
+  .topbar{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+  }
+  h1{font-size:24px;margin:0;font-weight:800}
+  .fechaBox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  input, select, textarea, button{
+    font-family:inherit;
+    font-size:18px;
+  }
+  input, select, textarea{
+    width:100%;
+    border:2px solid #ddd;
+    border-radius:12px;
+    padding:12px;
+    background:#fff;
+  }
+  input:focus, select:focus, textarea:focus{outline:3px solid rgba(181,43,43,.18);border-color:var(--rojo2)}
+  .fechaBox input{width:auto;min-width:180px}
+  button{
+    border:0;
+    border-radius:14px;
+    padding:13px 17px;
+    font-weight:800;
+    cursor:pointer;
+    background:#fff;
+    color:var(--rojo);
+    box-shadow:0 2px 5px rgba(0,0,0,.12);
+  }
+  button:active{transform:scale(.98)}
+  .btnRojo{background:var(--rojo);color:#fff}
+  .btnVerde{background:var(--verde);color:#fff}
+  .btnAzul{background:var(--azul);color:#fff}
+  .btnGris{background:#444;color:#fff}
+  .btnBorrar{background:#fff0f0;color:#a00000;box-shadow:none;border:1px solid #f0b5b5;padding:8px 10px;font-size:15px}
+  main{padding:16px;max-width:1400px;margin:0 auto}
+  .resumen{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:12px;
+    margin-bottom:16px;
+  }
+  .card{
+    background:#fff;
+    border-radius:18px;
+    padding:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+  }
+  .card label{display:block;color:var(--gris);font-weight:700;margin-bottom:6px;font-size:14px;text-transform:uppercase}
+  .montoGrande{font-size:26px;font-weight:900}
+  .positivo{color:var(--verde)} .negativo{color:#b00000}
+  .acciones{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:16px;
+  }
+  .acciones button{font-size:22px;padding:18px}
+  .libreta{
+    background:var(--papel);
+    border-radius:22px;
+    padding:14px;
+    box-shadow:0 3px 16px rgba(0,0,0,.12);
+    border:1px solid #e5dccb;
+  }
+  .columnas{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:14px;
+  }
+  .columna{
+    border:2px solid #eee1cd;
+    border-radius:18px;
+    overflow:hidden;
+    background:repeating-linear-gradient(to bottom,#fffdf7 0,#fffdf7 38px,#e6dece 39px);
+  }
+  .columna h2{
+    margin:0;
+    padding:12px;
+    color:#fff;
+    font-size:24px;
+    text-align:center;
+  }
+  .entrada h2{background:var(--verde)}
+  .gasto h2{background:var(--rojo)}
+  .ingreso h2{background:var(--azul)}
+  .lista{min-height:420px;padding:8px}
+  .renglon{
+    background:rgba(255,255,255,.86);
+    border:1px solid #eadfca;
+    border-radius:14px;
+    padding:9px;
+    margin-bottom:8px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px;
+    align-items:start;
+  }
+  .concepto{font-size:20px;font-weight:800;word-break:break-word}
+  .detalle{font-size:15px;color:#555;margin-top:3px;white-space:pre-wrap}
+  .monto{font-size:21px;font-weight:900;white-space:nowrap}
+  .vacio{color:#777;text-align:center;padding:40px 10px;font-size:18px}
+  .pieCol{
+    border-top:2px solid #eee1cd;
+    padding:12px;
+    background:#fff8eb;
+    display:flex;
+    justify-content:space-between;
+    font-size:20px;
+    font-weight:900;
+  }
+  .modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    z-index:50;
+    padding:18px;
+    align-items:center;
+    justify-content:center;
+  }
+  .modal.abierto{display:flex}
+  .modalBox{
+    background:#fff;
+    width:min(720px,100%);
+    max-height:92vh;
+    overflow:auto;
+    border-radius:22px;
+    padding:18px;
+    box-shadow:0 8px 30px rgba(0,0,0,.25);
+  }
+  .modalHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+  .modalHead h2{margin:0;font-size:26px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .campo{margin-bottom:12px}
+  .campo label{font-weight:800;display:block;margin-bottom:6px}
+  .rapidos{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
+  .rapidos button{font-size:16px;padding:9px 12px;background:#f5f5f5;color:#333;box-shadow:none;border:1px solid #ddd}
+  .herramientas{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+  .nota{
+    background:#fff8d8;
+    border:1px solid #eadc8b;
+    padding:12px;
+    border-radius:14px;
+    color:#5b4a00;
+    font-weight:700;
+    margin-bottom:12px;
+  }
+  @media(max-width:1000px){
+    .resumen{grid-template-columns:1fr 1fr}
+    .columnas{grid-template-columns:1fr}
+    .acciones{grid-template-columns:1fr}
+  }
+  @media print{
+    header,.acciones,.herramientas,.btnBorrar{display:none!important}
+    body{background:#fff}
+    main{padding:0;max-width:none}
+    .card,.libreta{box-shadow:none}
+    .columnas{grid-template-columns:1fr 1fr 1fr}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <h1>Libreta Digital VDC 360</h1>
+    <div class="fechaBox">
+      <strong>Fecha:</strong>
+      <input id="fecha" type="date" />
+      <button onclick="cambiarFecha(-1)">← Día</button>
+      <button onclick="cambiarFecha(1)">Día →</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="resumen">
+    <div class="card">
+      <label>Saldo inicial</label>
+      <input id="saldoInicial" type="number" step="0.01" placeholder="0.00" oninput="guardarYRender()" />
+    </div>
+    <div class="card">
+      <label>Total entradas</label>
+      <div id="totalEntradas" class="montoGrande positivo">$0.00</div>
+    </div>
+    <div class="card">
+      <label>Total gastos</label>
+      <div id="totalGastos" class="montoGrande negativo">$0.00</div>
+    </div>
+    <div class="card">
+      <label>Total ingresos</label>
+      <div id="totalIngresos" class="montoGrande positivo">$0.00</div>
+    </div>
+    <div class="card">
+      <label>Saldo final</label>
+      <div id="saldoFinal" class="montoGrande">$0.00</div>
+    </div>
+  </section>
+
+  <section class="acciones">
+    <button class="btnVerde" onclick="abrirModal('entrada')">+ Entrada</button>
+    <button class="btnRojo" onclick="abrirModal('gasto')">+ Gasto</button>
+    <button class="btnAzul" onclick="abrirModal('ingreso')">+ Ingreso</button>
+  </section>
+
+  <div class="herramientas">
+    <button class="btnGris" onclick="window.print()">Imprimir / PDF</button>
+    <button class="btnAzul" onclick="compartirWhatsApp()">Mandar resumen WhatsApp</button>
+    <button onclick="exportarCSV()">Exportar CSV</button>
+    <button onclick="limpiarDia()">Borrar este día</button>
+  </div>
+
+  <div class="nota">Tip: la idea es capturar renglones igual que en la libreta. Todo se guarda automático en la tablet por fecha.</div>
+
+  <section class="libreta">
+    <div class="columnas">
+      <div class="columna entrada">
+        <h2>Entradas</h2>
+        <div id="listaEntrada" class="lista"></div>
+        <div class="pieCol"><span>Total</span><span id="pieEntrada">$0.00</span></div>
+      </div>
+      <div class="columna gasto">
+        <h2>Gastos</h2>
+        <div id="listaGasto" class="lista"></div>
+        <div class="pieCol"><span>Total</span><span id="pieGasto">$0.00</span></div>
+      </div>
+      <div class="columna ingreso">
+        <h2>Ingresos</h2>
+        <div id="listaIngreso" class="lista"></div>
+        <div class="pieCol"><span>Total</span><span id="pieIngreso">$0.00</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="modal" class="modal">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2 id="modalTitulo">Nuevo registro</h2>
+      <button onclick="cerrarModal()">Cerrar</button>
+    </div>
+
+    <div id="botonesRapidos" class="rapidos"></div>
+
+    <div class="grid2">
+      <div class="campo">
+        <label>Concepto</label>
+        <input id="concepto" placeholder="Ej. Abonos, pulpas, cloro..." />
+      </div>
+      <div class="campo">
+        <label>Monto</label>
+        <input id="monto" type="number" step="0.01" placeholder="0.00" />
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="campo">
+        <label>Cantidad / kilos / piezas</label>
+        <input id="cantidad" placeholder="Ej. 18.11 kg, 1 azul, 2 pzas" />
+      </div>
+      <div class="campo">
+        <label>Persona / cliente</label>
+        <input id="persona" placeholder="Opcional" />
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Nota</label>
+      <textarea id="nota" rows="3" placeholder="Detalle opcional"></textarea>
+    </div>
+
+    <button id="btnGuardar" class="btnVerde" style="width:100%;font-size:22px;padding:18px" onclick="guardarRegistro()">Guardar renglón</button>
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  let tipoActual = 'entrada';
+  let datos = {};
+
+  const rapidos = {
+    entrada:['Hueso','Pulpas','Chamorro','Pierna','Cuero','Recorte','1 Azul','2 Azul'],
+    gasto:['Abonos','Pichardón','Refacción','Vinagre','Sueldos','Pablo','Medicamento','Cloro Jabón','Oscar','Almuerzo','Esparta Pastor'],
+    ingreso:['Transferencia','Efectivo','José','Brando','Sr. Lugo','Machin','Mostrador','Cliente crédito']
+  };
+
+  function hoy(){
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0,10);
+  }
+
+  function moneda(n){
+    return Number(n || 0).toLocaleString('es-MX',{style:'currency',currency:'MXN'});
+  }
+
+  function key(){ return 'libreta_vdc360_' + $('fecha').value; }
+
+  function datosBase(){ return {saldoInicial:0, entrada:[], gasto:[], ingreso:[]}; }
+
+  function cargar(){
+    datos = JSON.parse(localStorage.getItem(key()) || 'null') || datosBase();
+    $('saldoInicial').value = datos.saldoInicial || '';
+    render();
+  }
+
+  function guardar(){
+    datos.saldoInicial = Number($('saldoInicial').value || 0);
+    localStorage.setItem(key(), JSON.stringify(datos));
+  }
+
+  function guardarYRender(){ guardar(); render(); }
+
+  function total(tipo){ return datos[tipo].reduce((s,r)=>s + Number(r.monto || 0),0); }
+
+  function renderLista(tipo, id){
+    const cont = $(id);
+    cont.innerHTML = '';
+    if(!datos[tipo].length){
+      cont.innerHTML = '<div class="vacio">Sin renglones todavía</div>';
+      return;
+    }
+    datos[tipo].forEach((r,i)=>{
+      const div = document.createElement('div');
+      div.className = 'renglon';
+      const detalle = [r.cantidad, r.persona, r.nota].filter(Boolean).join('\n');
+      div.innerHTML = `
+        <div>
+          <div class="concepto">${escapeHtml(r.concepto)}</div>
+          <div class="detalle">${escapeHtml(detalle)}</div>
+          <button class="btnBorrar" onclick="borrarRegistro('${tipo}',${i})">Borrar</button>
+        </div>
+        <div class="monto">${moneda(r.monto)}</div>
+      `;
+      cont.appendChild(div);
+    });
+  }
+
+  function render(){
+    renderLista('entrada','listaEntrada');
+    renderLista('gasto','listaGasto');
+    renderLista('ingreso','listaIngreso');
+    const te = total('entrada'), tg = total('gasto'), ti = total('ingreso');
+    const sf = Number(datos.saldoInicial || 0) + te + ti - tg;
+    $('totalEntradas').textContent = moneda(te);
+    $('totalGastos').textContent = moneda(tg);
+    $('totalIngresos').textContent = moneda(ti);
+    $('saldoFinal').textContent = moneda(sf);
+    $('saldoFinal').className = 'montoGrande ' + (sf < 0 ? 'negativo':'positivo');
+    $('pieEntrada').textContent = moneda(te);
+    $('pieGasto').textContent = moneda(tg);
+    $('pieIngreso').textContent = moneda(ti);
+  }
+
+  function abrirModal(tipo){
+    tipoActual = tipo;
+    $('modalTitulo').textContent = tipo === 'entrada' ? 'Nueva entrada' : tipo === 'gasto' ? 'Nuevo gasto' : 'Nuevo ingreso';
+    $('concepto').value = '';
+    $('monto').value = '';
+    $('cantidad').value = '';
+    $('persona').value = '';
+    $('nota').value = '';
+    const br = $('botonesRapidos');
+    br.innerHTML = '';
+    rapidos[tipo].forEach(txt=>{
+      const b = document.createElement('button');
+      b.textContent = txt;
+      b.onclick = () => $('concepto').value = txt;
+      br.appendChild(b);
+    });
+    $('modal').classList.add('abierto');
+    setTimeout(()=>$('concepto').focus(),100);
+  }
+
+  function cerrarModal(){ $('modal').classList.remove('abierto'); }
+
+  function guardarRegistro(){
+    const concepto = $('concepto').value.trim();
+    const monto = Number($('monto').value || 0);
+    if(!concepto){ alert('Falta el concepto.'); return; }
+    if(!monto){ alert('Falta el monto.'); return; }
+    datos[tipoActual].push({
+      concepto,
+      monto,
+      cantidad:$('cantidad').value.trim(),
+      persona:$('persona').value.trim(),
+      nota:$('nota').value.trim(),
+      hora:new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})
+    });
+    guardar();
+    render();
+    cerrarModal();
+  }
+
+  function borrarRegistro(tipo,i){
+    if(confirm('¿Borrar este renglón?')){
+      datos[tipo].splice(i,1);
+      guardar();
+      render();
+    }
+  }
+
+  function limpiarDia(){
+    if(confirm('¿Borrar todos los datos de esta fecha?')){
+      localStorage.removeItem(key());
+      cargar();
+    }
+  }
+
+  function cambiarFecha(n){
+    const d = new Date($('fecha').value + 'T00:00:00');
+    d.setDate(d.getDate()+n);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    $('fecha').value = d.toISOString().slice(0,10);
+    cargar();
+  }
+
+  function textoResumen(){
+    const te = total('entrada'), tg = total('gasto'), ti = total('ingreso');
+    const sf = Number(datos.saldoInicial || 0) + te + ti - tg;
+    let txt = `LIBRETA DIGITAL VDC 360\nFecha: ${$('fecha').value}\n\n`;
+    txt += `Saldo inicial: ${moneda(datos.saldoInicial)}\nEntradas: ${moneda(te)}\nGastos: ${moneda(tg)}\nIngresos: ${moneda(ti)}\nSaldo final: ${moneda(sf)}\n\n`;
+    ['entrada','gasto','ingreso'].forEach(tipo=>{
+      txt += tipo.toUpperCase() + ':\n';
+      if(!datos[tipo].length) txt += 'Sin registros\n';
+      datos[tipo].forEach(r=>{
+        txt += `- ${r.concepto}: ${moneda(r.monto)}`;
+        if(r.cantidad) txt += ` | ${r.cantidad}`;
+        if(r.persona) txt += ` | ${r.persona}`;
+        if(r.nota) txt += ` | ${r.nota}`;
+        txt += '\n';
+      });
+      txt += '\n';
+    });
+    return txt;
+  }
+
+  function compartirWhatsApp(){
+    window.open('https://wa.me/?text=' + encodeURIComponent(textoResumen()), '_blank');
+  }
+
+  function exportarCSV(){
+    let rows = [['fecha','tipo','concepto','monto','cantidad','persona','nota','hora']];
+    ['entrada','gasto','ingreso'].forEach(tipo=>{
+      datos[tipo].forEach(r=>rows.push([$('fecha').value,tipo,r.concepto,r.monto,r.cantidad,r.persona,r.nota,r.hora]));
+    });
+    const csv = rows.map(row => row.map(v => '"' + String(v ?? '').replaceAll('"','""') + '"').join(',')).join('\n');
+    const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `libreta_vdc360_${$('fecha').value}.csv`;
+    a.click();
+  }
+
+  function escapeHtml(str){
+    return String(str||'').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+
+  $('fecha').value = hoy();
+  $('fecha').addEventListener('change', cargar);
+  cargar();
+</script>
+</body>
+</html>
