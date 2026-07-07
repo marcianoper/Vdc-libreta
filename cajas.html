@@ -59,14 +59,29 @@
 </div>
 <div class="toast" id="toast"><span id="toastMsg"></span><button id="toastUndo" style="display:none">Deshacer</button></div>
 <script>
-const productosBase=['Recorte','Pierna','Chamorro','Pulpas','Hueso','Costilla','Bola','Diezmillo','Falda','Pecho'];
+const productosBase=['Recorte','Pierna','Chamorro sin perico','Costilla GENA','Chamorro','Pulpas','Hueso','Costilla','Bola','Diezmillo','Falda','Pecho'];
+const cajasInicialesWhatsApp = [{"producto": "Costilla GENA", "peso": 26.02, "estado": "Disponible", "cliente": "", "ts": 1720000000000}, {"producto": "Costilla GENA", "peso": 22.3, "estado": "Disponible", "cliente": "", "ts": 1720000000001}, {"producto": "Recorte", "peso": 23.56, "estado": "Vendida", "cliente": "tina", "ts": 1720000000002}, {"producto": "Recorte", "peso": 25.34, "estado": "Vendida", "cliente": "tina", "ts": 1720000000003}, {"producto": "Recorte", "peso": 29.24, "estado": "Vendida", "cliente": "tina", "ts": 1720000000004}, {"producto": "Recorte", "peso": 27.16, "estado": "Vendida", "cliente": "tina", "ts": 1720000000005}, {"producto": "Recorte", "peso": 23.4, "estado": "Vendida", "cliente": "toño", "ts": 1720000000006}, {"producto": "Recorte", "peso": 23.32, "estado": "Vendida", "cliente": "toño", "ts": 1720000000007}, {"producto": "Recorte", "peso": 21.92, "estado": "Vendida", "cliente": "toño", "ts": 1720000000008}, {"producto": "Recorte", "peso": 22.38, "estado": "Vendida", "cliente": "toño", "ts": 1720000000009}, {"producto": "Recorte", "peso": 24.02, "estado": "Vendida", "cliente": "toño", "ts": 1720000000010}, {"producto": "Recorte", "peso": 23.2, "estado": "Vendida", "cliente": "toño", "ts": 1720000000011}, {"producto": "Chamorro sin perico", "peso": 26.04, "estado": "Disponible", "cliente": "", "ts": 1720000000012}, {"producto": "Chamorro sin perico", "peso": 23.74, "estado": "Disponible", "cliente": "", "ts": 1720000000013}, {"producto": "Chamorro sin perico", "peso": 25.0, "estado": "Disponible", "cliente": "", "ts": 1720000000014}, {"producto": "Recorte", "peso": 25.68, "estado": "Disponible", "cliente": "", "ts": 1720000000015}, {"producto": "Recorte", "peso": 20.74, "estado": "Disponible", "cliente": "", "ts": 1720000000016}, {"producto": "Recorte", "peso": 27.28, "estado": "Disponible", "cliente": "", "ts": 1720000000017}, {"producto": "Recorte", "peso": 25.78, "estado": "Disponible", "cliente": "", "ts": 1720000000018}, {"producto": "Recorte", "peso": 23.52, "estado": "Disponible", "cliente": "", "ts": 1720000000019}, {"producto": "Recorte", "peso": 27.46, "estado": "Disponible", "cliente": "", "ts": 1720000000020}, {"producto": "Recorte", "peso": 25.02, "estado": "Disponible", "cliente": "", "ts": 1720000000021}, {"producto": "Recorte", "peso": 25.44, "estado": "Disponible", "cliente": "", "ts": 1720000000022}, {"producto": "Recorte", "peso": 26.24, "estado": "Disponible", "cliente": "", "ts": 1720000000023}, {"producto": "Recorte", "peso": 23.68, "estado": "Disponible", "cliente": "", "ts": 1720000000024}, {"producto": "Recorte", "peso": 22.86, "estado": "Disponible", "cliente": "", "ts": 1720000000025}, {"producto": "Recorte", "peso": 25.72, "estado": "Disponible", "cliente": "", "ts": 1720000000026}, {"producto": "Recorte", "peso": 21.86, "estado": "Disponible", "cliente": "", "ts": 1720000000027}, {"producto": "Recorte", "peso": 24.9, "estado": "Disponible", "cliente": "", "ts": 1720000000028}, {"producto": "Recorte", "peso": 26.16, "estado": "Disponible", "cliente": "", "ts": 1720000000029}, {"producto": "Recorte", "peso": 25.0, "estado": "Disponible", "cliente": "", "ts": 1720000000030}, {"producto": "Recorte", "peso": 21.56, "estado": "Vendida", "cliente": "carmelo", "ts": 1720000000031}, {"producto": "Recorte", "peso": 23.36, "estado": "Vendida", "cliente": "carmelo", "ts": 1720000000032}, {"producto": "Recorte", "peso": 22.22, "estado": "Vendida", "cliente": "carmelo", "ts": 1720000000033}, {"producto": "Recorte", "peso": 22.42, "estado": "Vendida", "cliente": "carmelo", "ts": 1720000000034}, {"producto": "Recorte", "peso": 26.64, "estado": "Vendida", "cliente": "carmelo", "ts": 1720000000035}, {"producto": "Pierna", "peso": 25.52, "estado": "Disponible", "cliente": "", "ts": 1720000000036}, {"producto": "Pierna", "peso": 26.52, "estado": "Disponible", "cliente": "", "ts": 1720000000037}, {"producto": "Pierna", "peso": 27.0, "estado": "Disponible", "cliente": "", "ts": 1720000000038}, {"producto": "Pierna", "peso": 19.88, "estado": "Disponible", "cliente": "", "ts": 1720000000039}, {"producto": "Pierna", "peso": 29.52, "estado": "Disponible", "cliente": "", "ts": 1720000000040}, {"producto": "Pierna", "peso": 24.28, "estado": "Disponible", "cliente": "", "ts": 1720000000041}, {"producto": "Pierna", "peso": 27.46, "estado": "Disponible", "cliente": "", "ts": 1720000000042}, {"producto": "Pierna", "peso": 30.02, "estado": "Disponible", "cliente": "", "ts": 1720000000043}, {"producto": "Pierna", "peso": 22.68, "estado": "Disponible", "cliente": "", "ts": 1720000000044}, {"producto": "Pierna", "peso": 19.3, "estado": "Disponible", "cliente": "", "ts": 1720000000045}, {"producto": "Pierna", "peso": 23.8, "estado": "Disponible", "cliente": "", "ts": 1720000000046}, {"producto": "Pierna", "peso": 24.54, "estado": "Disponible", "cliente": "", "ts": 1720000000047}, {"producto": "Pierna", "peso": 25.0, "estado": "Disponible", "cliente": "", "ts": 1720000000048}, {"producto": "Pierna", "peso": 27.98, "estado": "Disponible", "cliente": "", "ts": 1720000000049}, {"producto": "Pierna", "peso": 23.9, "estado": "Disponible", "cliente": "", "ts": 1720000000050}, {"producto": "Pierna", "peso": 21.34, "estado": "Disponible", "cliente": "", "ts": 1720000000051}, {"producto": "Pierna", "peso": 21.48, "estado": "Disponible", "cliente": "", "ts": 1720000000052}];
 let data={cajas:[]}; let editando=null; let toastTimer=null;
 const $=id=>document.getElementById(id);
 function hoy(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)}
 function key(){return 'inventario_cajas_vdc360_simple_'+$('fecha').value}
 function num(n){return Number(n||0).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function normal(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
-function cargar(){const raw=localStorage.getItem(key());data=raw?JSON.parse(raw):{cajas:[]};editando=null;resetForm(false);render()}
+function cargar(){
+  const kActual = key();
+  const kAnterior1 = 'inventario_cajas_vdc360_' + $('fecha').value;
+  const kAnterior2 = 'inventario_cajas_vdc360_simple_' + $('fecha').value;
+  let raw = localStorage.getItem(kActual) || localStorage.getItem(kAnterior1) || localStorage.getItem(kAnterior2);
+  if(raw){
+    data = JSON.parse(raw);
+  }else{
+    data = {cajas: cajasInicialesWhatsApp.map(x=>({...x}))};
+    localStorage.setItem(kActual, JSON.stringify(data));
+  }
+  editando=null;
+  resetForm(false);
+  render();
+}
 function guardar(){localStorage.setItem(key(),JSON.stringify(data));render()}
 function init(){ $('fecha').value=hoy(); $('chips').innerHTML=productosBase.map(p=>`<button type="button" class="chip" onclick="seleccionarProducto('${p}')">${p}</button>`).join(''); $('fecha').addEventListener('change',cargar); $('estado').addEventListener('change',()=>{$('clienteBox').style.display=$('estado').value==='Disponible'?'none':'block'}); $('peso').addEventListener('keydown',e=>{if(e.key==='Enter')guardarCaja()}); cargar(); }
 function seleccionarProducto(p){$('producto').value=p;$('peso').focus()}
@@ -77,48 +92,69 @@ function borrar(i){const eliminado=data.cajas[i]; if(!eliminado)return; data.caj
 function cambiarEstado(i,estado){const c=data.cajas[i]; if(!c)return; c.estado=estado; if(estado==='Disponible') c.cliente=''; guardar(); mostrarToast('Estado actualizado.');}
 function filtradas(){const q=normal($('buscar').value); const fe=$('fEstado').value; const fp=$('fProducto').value; return data.cajas.map((c,i)=>({...c,_i:i})).filter(c=>(!q||normal(c.producto+' '+(c.cliente||'')).includes(q))&&(!fe||c.estado===fe)&&(!fp||c.producto===fp));}
 function render(){const total=data.cajas.reduce((a,c)=>a+Number(c.peso||0),0); const disp=data.cajas.filter(c=>c.estado==='Disponible').reduce((a,c)=>a+Number(c.peso||0),0); const ven=data.cajas.filter(c=>c.estado==='Vendida').reduce((a,c)=>a+Number(c.peso||0),0); const car=data.cajas.filter(c=>c.estado==='Carnicería').reduce((a,c)=>a+Number(c.peso||0),0); $('cajasTotal').textContent=data.cajas.length; $('kgTotal').textContent=num(total)+' kg'; $('kgDisponible').textContent=num(disp)+' kg'; $('kgVendida').textContent=num(ven)+' kg'; $('kgCarniceria').textContent=num(car)+' kg'; const prods=[...new Set(data.cajas.map(c=>c.producto).filter(Boolean))].sort(); $('fProducto').innerHTML='<option value="">Todos los productos</option>'+prods.map(p=>`<option ${$('fProducto').value===p?'selected':''}>${escapeHtml(p)}</option>`).join(''); const arr=filtradas(); const tb=$('tbody'); if(!arr.length){tb.innerHTML='<tr><td colspan="6" class="empty">No hay cajas registradas con estos filtros.</td></tr>';return} tb.innerHTML=arr.map((c,idx)=>`<tr><td>${idx+1}</td><td>${escapeHtml(c.producto)}</td><td class="num">${num(c.peso)} kg</td><td><select class="state" onchange="cambiarEstado(${c._i},this.value)"><option ${c.estado==='Disponible'?'selected':''}>Disponible</option><option ${c.estado==='Vendida'?'selected':''}>Vendida</option><option ${c.estado==='Carnicería'?'selected':''}>Carnicería</option></select></td><td>${escapeHtml(c.cliente||'-')}</td><td><div class="actions"><button class="mini" onclick="editar(${c._i})">Editar</button><button class="mini delete" onclick="borrar(${c._i})">Eliminar</button></div></td></tr>`).join('');}
-
+function resumenPorProducto(cajas){
+  const por={};
+  cajas.forEach(c=>{
+    const p=c.producto||'Sin producto';
+    por[p]=por[p]||{c:0,kg:0,items:[]};
+    por[p].c++;
+    por[p].kg+=Number(c.peso||0);
+    por[p].items.push(c);
+  });
+  return por;
+}
+function agregarSeccionPorProducto(titulo,cajas){
+  let t=`\n══════════════════════\n${titulo}\n══════════════════════\n`;
+  if(!cajas.length) return t+'Sin cajas.\n';
+  const por=resumenPorProducto(cajas);
+  Object.keys(por).sort().forEach(p=>{
+    t+=`\n${p.toUpperCase()}\n`;
+    por[p].items.forEach((c,i)=>t+=`${i+1}. ${num(c.peso)} kg\n`);
+    t+=`Subtotal ${p}: ${por[p].c} cajas / ${num(por[p].kg)} kg\n`;
+  });
+  const kg=cajas.reduce((a,c)=>a+Number(c.peso||0),0);
+  t+=`\nTOTAL\n📦 ${cajas.length} cajas\n⚖️ ${num(kg)} kg\n`;
+  return t;
+}
 function resumenTexto(){
- const numf=n=>Number(n||0).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});
- let t=`📦 INVENTARIO DE CAJAS VDC360\nFecha: ${$('fecha').value}\n`;
- const totalKg=data.cajas.reduce((a,c)=>a+Number(c.peso||0),0);
- const disp=data.cajas.filter(c=>c.estado==='Disponible');
- const ven=data.cajas.filter(c=>c.estado==='Vendida');
- const car=data.cajas.filter(c=>c.estado==='Carnicería');
- t+=`\n════ RESUMEN GENERAL ════\n`;
- t+=`Cajas registradas: ${data.cajas.length}\n`;
- t+=`Kilos totales: ${numf(totalKg)} kg\n`;
- t+=`Disponibles: ${disp.length} cajas / ${numf(disp.reduce((a,c)=>a+c.peso,0))} kg\n`;
- t+=`Vendidas: ${ven.length} cajas / ${numf(ven.reduce((a,c)=>a+c.peso,0))} kg\n`;
- const porProd={};
- data.cajas.forEach(c=>{porProd[c.producto]=porProd[c.producto]||{c:0,kg:0};porProd[c.producto].c++;porProd[c.producto].kg+=Number(c.peso||0);});
- t+=`\n════ RESUMEN POR PRODUCTO ════\n`;
- Object.keys(porProd).sort().forEach(p=>t+=`• ${p}: ${porProd[p].c} cajas / ${numf(porProd[p].kg)} kg\n`);
- const grupos={};
- ven.forEach(c=>{const cli=c.cliente||'Sin cliente';(grupos[cli]??=[]).push(c);});
- Object.keys(grupos).sort().forEach(cli=>{
-   t+=`\n════ VENTA - ${cli.toUpperCase()} ════\n`;
-   const by={};
-   grupos[cli].forEach(c=>(by[c.producto]??=[]).push(c));
-   Object.keys(by).sort().forEach(prod=>{
-      const arr=by[prod];
-      t+=`\n${prod.toUpperCase()}\n`;
-      arr.forEach((c,i)=>t+=`${i+1}. ${numf(c.peso)} kg\n`);
-      const kg=arr.reduce((a,c)=>a+c.peso,0);
-      t+=`Subtotal: ${arr.length} cajas / ${numf(kg)} kg\n`;
-   });
- });
- t+=`\n════ INVENTARIO DISPONIBLE ════\n`;
- const byd={};
- disp.forEach(c=>(byd[c.producto]??=[]).push(c));
- Object.keys(byd).sort().forEach(prod=>{
-   const arr=byd[prod];
-   t+=`\n${prod.toUpperCase()}\n`;
-   arr.forEach((c,i)=>t+=`${i+1}. ${numf(c.peso)} kg\n`);
-   const kg=arr.reduce((a,c)=>a+c.peso,0);
-   t+=`Subtotal: ${arr.length} cajas / ${numf(kg)} kg\n`;
- });
- return t;
+  const total=data.cajas.reduce((a,c)=>a+Number(c.peso||0),0);
+  const disp=data.cajas.filter(c=>c.estado==='Disponible');
+  const vend=data.cajas.filter(c=>c.estado==='Vendida');
+  const carn=data.cajas.filter(c=>c.estado==='Carnicería');
+  let t=`📦 INVENTARIO DE CAJAS VDC360\nFecha: ${$('fecha').value}\n\n`;
+  t+=`RESUMEN GENERAL\n`;
+  t+=`Cajas registradas: ${data.cajas.length}\n`;
+  t+=`Kilos totales: ${num(total)} kg\n`;
+  t+=`Disponible: ${disp.length} cajas / ${num(disp.reduce((a,c)=>a+Number(c.peso||0),0))} kg\n`;
+  t+=`Vendidas: ${vend.length} cajas / ${num(vend.reduce((a,c)=>a+Number(c.peso||0),0))} kg\n`;
+  t+=`Carnicería/abiertas: ${carn.length} cajas / ${num(carn.reduce((a,c)=>a+Number(c.peso||0),0))} kg\n`;
+
+  t+=`\nRESUMEN POR PRODUCTO\n`;
+  const porTodo=resumenPorProducto(data.cajas);
+  Object.keys(porTodo).sort().forEach(p=>{
+    t+=`- ${p}: ${porTodo[p].c} cajas / ${num(porTodo[p].kg)} kg\n`;
+  });
+
+  const ventasPorCliente={};
+  vend.forEach(c=>{
+    const cliente=(c.cliente||'Sin cliente').trim();
+    ventasPorCliente[cliente]=ventasPorCliente[cliente]||[];
+    ventasPorCliente[cliente].push(c);
+  });
+  Object.keys(ventasPorCliente).sort().forEach(cliente=>{
+    t+=agregarSeccionPorProducto(`VENTA - ${cliente.toUpperCase()}`, ventasPorCliente[cliente]);
+  });
+
+  if(carn.length) t+=agregarSeccionPorProducto('CARNICERÍA / ABIERTAS', carn);
+  t+=agregarSeccionPorProducto('INVENTARIO DISPONIBLE', disp);
+
+  t+=`\nINVENTARIO FINAL DISPONIBLE\n`;
+  const porDisp=resumenPorProducto(disp);
+  Object.keys(porDisp).sort().forEach(p=>{
+    t+=`- ${p}: ${porDisp[p].c} cajas / ${num(porDisp[p].kg)} kg\n`;
+  });
+  t+=`\nTOTAL DISPONIBLE: ${disp.length} cajas / ${num(disp.reduce((a,c)=>a+Number(c.peso||0),0))} kg`;
+  return t;
 }
 function mandarWhatsApp(){window.open('https://wa.me/?text='+encodeURIComponent(resumenTexto()),'_blank')}
 function exportarCSV(){let rows=[['Fecha','Producto','Peso kg','Estado','Cliente/Destino']];data.cajas.forEach(c=>rows.push([$('fecha').value,c.producto,c.peso,c.estado,c.cliente||'']));const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='inventario_cajas_'+$('fecha').value+'.csv';a.click()}
