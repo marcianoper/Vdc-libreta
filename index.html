@@ -80,7 +80,7 @@ h1{font-size:26px;letter-spacing:.5px;margin:0;font-weight:900}.dateBox{display:
   </div>
 </div>
 <script>
-const productos = ['Hueso','Pulpas','Recorte','Chamorro','Plomo','Libro','Cuero','Menudo','Panza','Pata','Tripa','Bofe','Corazón','Lengua','Cachete','Cuajo'];
+const productos = ['Azul','Hueso','Pulpas','Recorte','Chamorro','Plomo','Libro','Cuero','Menudo','Panza','Pata','Tripa','Bofe','Corazón','Lengua','Cachete','Cuajo'];
 const conceptos = ['Abonos','Sueldos','Oscar','Pablo','Vinagre','Medicamento','Almuerzo','Cloro Jabón','Refacción','Esparte Pastor','Gasolina','Casetas','Flete','Depósito','Transferencia','Efectivo','Cliente','Pago proveedor'];
 let data = {saldoInicial:0, entradas:[], gastos:[], ingresos:[]};
 let tipoActual = 'entrada';
@@ -93,8 +93,32 @@ function num(n){ return Number(n||0).toLocaleString('es-MX',{minimumFractionDigi
 function cargar(){ const raw=localStorage.getItem(key()); data = raw ? JSON.parse(raw) : {saldoInicial:0, entradas:[], gastos:[], ingresos:[]}; $('saldoInicial').value=data.saldoInicial||0; render(); }
 function guardar(){ data.saldoInicial = Number($('saldoInicial').value||0); localStorage.setItem(key(), JSON.stringify(data)); render(); }
 function renderLista(tipo, id){ const cont=$(id); cont.innerHTML=''; const arr=data[tipo]; if(!arr.length){ cont.innerHTML='<div class="empty">Toca ＋ para agregar</div>'; return; } arr.forEach((x,i)=>{ const row=document.createElement('div'); row.className='row'; row.onclick=(e)=>{ if(e.target.tagName==='BUTTON')return; abrirModal(tipo.slice(0,-1), i); }; row.innerHTML=`<div class="name">${escapeHtml(x.nombre)}</div><div class="num">${tipo==='entradas'?num(x.valor):money(x.valor)}</div><button onclick="borrar('${tipo}',${i})">×</button>`; cont.appendChild(row); }); }
+
+function normalizarTexto(s){ return String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+function esEntradaAzul(){ return tipoActual==='entrada' && normalizarTexto($('nombre').value)==='azul'; }
+function aplicarPesoAzul(){ if(esEntradaAzul()){ $('valor').value='27.22'; } }
+function seleccionarNombre(nombre){ $('nombre').value=nombre; aplicarPesoAzul(); }
 function render(){ renderLista('entradas','entradasRows'); renderLista('gastos','gastosRows'); renderLista('ingresos','ingresosRows'); const te=data.entradas.reduce((a,b)=>a+Number(b.valor||0),0); const tg=data.gastos.reduce((a,b)=>a+Number(b.valor||0),0); const ti=data.ingresos.reduce((a,b)=>a+Number(b.valor||0),0); $('totalEntradas').textContent=num(te)+' kg'; $('entradasTotalPie').textContent=num(te); $('totalGastos').textContent=money(tg); $('gastosTotalPie').textContent=money(tg); $('totalIngresos').textContent=money(ti); $('ingresosTotalPie').textContent=money(ti); $('saldoActual').textContent=money(Number(data.saldoInicial||0)+ti-tg); }
-function abrirModal(tipo, index=null){ tipoActual=tipo; editando=index; const esEntrada=tipo==='entrada'; $('modalTitle').textContent=(index===null?'Agregar ':'Editar ')+(esEntrada?'Entrada':tipo==='gasto'?'Gasto':'Ingreso'); $('labelNombre').textContent=esEntrada?'Producto':'Concepto'; $('labelValor').textContent=esEntrada?'Kg':'Monto'; const lista=esEntrada?productos:conceptos; $('sugerencias').innerHTML=lista.map(x=>`<option value="${x}">`).join(''); $('chips').innerHTML=lista.slice(0,10).map(x=>`<button class="chip" onclick="$('nombre').value='${x}'">${x}</button>`).join(''); let item=null; if(index!==null){ const k=tipo==='entrada'?'entradas':tipo==='gasto'?'gastos':'ingresos'; item=data[k][index]; } $('nombre').value=item?item.nombre:''; $('valor').value=item?item.valor:''; $('modal').classList.add('show'); }
+function abrirModal(tipo, index=null){
+  tipoActual=tipo;
+  editando=index;
+  const esEntrada=tipo==='entrada';
+  $('modalTitle').textContent=(index===null?'Agregar ':'Editar ')+(esEntrada?'Entrada':tipo==='gasto'?'Gasto':'Ingreso');
+  $('labelNombre').textContent=esEntrada?'Producto':'Concepto';
+  $('labelValor').textContent=esEntrada?'Kg':'Monto';
+  const lista=esEntrada?productos:conceptos;
+  $('sugerencias').innerHTML=lista.map(x=>`<option value="${escapeHtml(x)}">`).join('');
+  $('chips').innerHTML=lista.slice(0,10).map(x=>`<button class="chip" type="button" data-nombre="${escapeHtml(x)}">${escapeHtml(x)}</button>`).join('');
+  $('chips').querySelectorAll('.chip').forEach(btn=>btn.addEventListener('click',()=>seleccionarNombre(btn.dataset.nombre)));
+  let item=null;
+  if(index!==null){
+    const k=tipo==='entrada'?'entradas':tipo==='gasto'?'gastos':'ingresos';
+    item=data[k][index];
+  }
+  $('nombre').value=item?item.nombre:'';
+  $('valor').value=item?item.valor:'';
+  $('modal').classList.add('show');
+}
 function cerrarModal(){ $('modal').classList.remove('show'); editando=null; }
 function cerrarSiFondo(e){ if(e.target.id==='modal') cerrarModal(); }
 function guardarMovimiento(){ const nombre=$('nombre').value.trim(); const valor=Number($('valor').value||0); if(!nombre || !valor){ alert('Falta llenar los datos.'); return; } const k=tipoActual==='entrada'?'entradas':tipoActual==='gasto'?'gastos':'ingresos'; const obj={nombre,valor}; if(editando!==null) data[k][editando]=obj; else data[k].push(obj); guardar(); cerrarModal(); }
@@ -104,6 +128,7 @@ function escapeHtml(s){ return String(s).replace(/[&<>"]/g, m=>({'&':'&amp;','<'
 function resumenTexto(){ const fecha=$('fecha').value; const te=data.entradas.reduce((a,b)=>a+Number(b.valor||0),0); const tg=data.gastos.reduce((a,b)=>a+Number(b.valor||0),0); const ti=data.ingresos.reduce((a,b)=>a+Number(b.valor||0),0); let t=`LIBRETA DIGITAL VDC360\nFecha: ${fecha}\n\nENTRADAS\n`; data.entradas.forEach(x=>t+=`- ${x.nombre}: ${num(x.valor)} kg\n`); t+=`Total entradas: ${num(te)} kg\n\nGASTOS\n`; data.gastos.forEach(x=>t+=`- ${x.nombre}: ${money(x.valor)}\n`); t+=`Total gastos: ${money(tg)}\n\nINGRESOS\n`; data.ingresos.forEach(x=>t+=`- ${x.nombre}: ${money(x.valor)}\n`); t+=`Total ingresos: ${money(ti)}\n\nSaldo inicial: ${money(data.saldoInicial)}\nSaldo actual: ${money(Number(data.saldoInicial||0)+ti-tg)}`; return t; }
 function mandarWhatsApp(){ window.open('https://wa.me/?text='+encodeURIComponent(resumenTexto()),'_blank'); }
 function exportarCSV(){ let rows=[['Fecha','Tipo','Concepto/Producto','Valor']]; ['entradas','gastos','ingresos'].forEach(k=>data[k].forEach(x=>rows.push([$('fecha').value,k,x.nombre,x.valor]))); rows.push([$('fecha').value,'saldo_inicial','',data.saldoInicial]); const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='libreta_vdc360_'+$('fecha').value+'.csv'; a.click(); }
+$('nombre').addEventListener('input', aplicarPesoAzul); $('nombre').addEventListener('change', aplicarPesoAzul);
 $('fecha').value=hoy(); $('fecha').addEventListener('change',cargar); $('saldoInicial').addEventListener('input',guardar); document.addEventListener('keydown',e=>{ if(e.key==='Escape') cerrarModal(); if(e.key==='Enter' && $('modal').classList.contains('show')) guardarMovimiento(); }); cargar();
 </script>
 </body>
