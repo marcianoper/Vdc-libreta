@@ -49,7 +49,7 @@ h1{font-size:26px;letter-spacing:.5px;margin:0;font-weight:900}.dateBox{display:
       </div>
     </div>
     <div class="summary">
-      <div class="card ventaDia editable"><div class="label">Venta del día</div><input id="ventaDia" type="number" step="0.01" inputmode="numeric" pattern="[0-9]*" value="0"></div>
+      <div class="card ventaDia editable"><div class="label">Venta del día</div><input id="ventaDia" type="text" inputmode="decimal" autocomplete="off" value="$0.00"></div>
       <div class="card"><div class="label">Entradas</div><div class="value" id="totalEntradas">0.00 kg</div></div>
       <div class="card"><div class="label">Ingresos</div><div class="value" id="totalIngresos">$0.00</div></div>
       <div class="card"><div class="label">Gastos</div><div class="value" id="totalGastos">$0.00</div></div>
@@ -95,6 +95,23 @@ function keyV2(){ return 'libreta_vdc360_v2_' + $('fecha').value; }
 function keyBackupV2(){ return 'libreta_vdc360_backup_v2_' + $('fecha').value; }
 function key(){ return keyV3(); }
 function money(n){ return Number(n||0).toLocaleString('es-MX',{style:'currency',currency:'MXN'}); }
+function parseMoneyInput(v){ return Number(String(v||'').replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1')) || 0; }
+function formatoVentaDia(n){ return Number(n||0).toLocaleString('es-MX',{style:'currency',currency:'MXN',minimumFractionDigits:2,maximumFractionDigits:2}); }
+function formatearVentaDia(){ const input=$('ventaDia'); data.ventaDia=parseMoneyInput(input.value); input.value=formatoVentaDia(data.ventaDia); }
+function formatoEdicionVentaDia(n){
+  const val=Number(n||0);
+  return val ? String(val).replace(/\.00$/,'') : '';
+}
+function prepararEdicionVentaDia(){
+  const input=$('ventaDia');
+  data.ventaDia=parseMoneyInput(input.value);
+  input.value=formatoEdicionVentaDia(data.ventaDia);
+  setTimeout(()=>input.select(),0);
+}
+function guardarVentaDiaSinFormatear(){
+  data.ventaDia=parseMoneyInput($('ventaDia').value);
+  localStorage.setItem(keyV3(), JSON.stringify(normalizarDatos(data)));
+}
 function num(n){ return Number(n||0).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function datosVacios(){ return {version:3, ventaDia:0, entradas:[], gastos:[], ingresos:[]}; }
 function normalizarDatos(obj){
@@ -136,14 +153,14 @@ function cargar(){
   data=datosVacios();
   render();
 }
-function guardar(){ data=normalizarDatos(data); data.ventaDia=Number($('ventaDia')?.value||0); localStorage.setItem(keyV3(), JSON.stringify(data)); render(); }
+function guardar(){ data=normalizarDatos(data); data.ventaDia=parseMoneyInput($('ventaDia')?.value||data.ventaDia||0); localStorage.setItem(keyV3(), JSON.stringify(data)); render(); }
 function renderLista(tipo, id){ const cont=$(id); cont.innerHTML=''; const arr=data[tipo]; if(!arr.length){ cont.innerHTML='<div class="empty">Toca ＋ para agregar</div>'; return; } arr.forEach((x,i)=>{ const row=document.createElement('div'); row.className='row'; row.onclick=(e)=>{ if(e.target.tagName==='BUTTON')return; abrirModal(tipo.slice(0,-1), i); }; row.innerHTML=`<div class="name">${escapeHtml(x.nombre)}</div><div class="num">${tipo==='entradas'?num(x.valor):money(x.valor)}</div><button onclick="borrar('${tipo}',${i})">×</button>`; cont.appendChild(row); }); }
 
 function normalizarTexto(s){ return String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function esEntradaAzul(){ return tipoActual==='entrada' && normalizarTexto($('nombre').value)==='azul'; }
 function aplicarPesoAzul(){ if(esEntradaAzul()){ $('valor').value='27.22'; } }
 function seleccionarNombre(nombre){ $('nombre').value=nombre; aplicarPesoAzul(); }
-function render(){ renderLista('entradas','entradasRows'); renderLista('gastos','gastosRows'); renderLista('ingresos','ingresosRows'); const te=data.entradas.reduce((a,b)=>a+Number(b.valor||0),0); const tg=data.gastos.reduce((a,b)=>a+Number(b.valor||0),0); const ti=data.ingresos.reduce((a,b)=>a+Number(b.valor||0),0); $('ventaDia').value=Number(data.ventaDia||0); $('totalEntradas').textContent=num(te)+' kg'; $('entradasTotalPie').textContent=num(te); $('totalGastos').textContent=money(tg); $('gastosTotalPie').textContent=money(tg); $('totalIngresos').textContent=money(ti); $('ingresosTotalPie').textContent=money(ti); }
+function render(){ renderLista('entradas','entradasRows'); renderLista('gastos','gastosRows'); renderLista('ingresos','ingresosRows'); const te=data.entradas.reduce((a,b)=>a+Number(b.valor||0),0); const tg=data.gastos.reduce((a,b)=>a+Number(b.valor||0),0); const ti=data.ingresos.reduce((a,b)=>a+Number(b.valor||0),0); $('ventaDia').value=formatoVentaDia(data.ventaDia||0); $('totalEntradas').textContent=num(te)+' kg'; $('entradasTotalPie').textContent=num(te); $('totalGastos').textContent=money(tg); $('gastosTotalPie').textContent=money(tg); $('totalIngresos').textContent=money(ti); $('ingresosTotalPie').textContent=money(ti); }
 function abrirModal(tipo, index=null){
   tipoActual=tipo;
   editando=index;
@@ -215,11 +232,22 @@ function limpiarDia(){
   });
 }
 function escapeHtml(s){ return String(s).replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
-function resumenTexto(){ const fecha=$('fecha').value; data.ventaDia=Number($('ventaDia').value||0); const te=data.entradas.reduce((a,b)=>a+Number(b.valor||0),0); const tg=data.gastos.reduce((a,b)=>a+Number(b.valor||0),0); const ti=data.ingresos.reduce((a,b)=>a+Number(b.valor||0),0); let t=`LIBRETA DIGITAL VDC360\nFecha: ${fecha}\n\nVENTA DEL DÍA: ${money(data.ventaDia)}\n\nENTRADAS\n`; data.entradas.forEach(x=>t+=`- ${x.nombre}: ${num(x.valor)} kg\n`); t+=`Total entradas: ${num(te)} kg\n\nGASTOS\n`; data.gastos.forEach(x=>t+=`- ${x.nombre}: ${money(x.valor)}\n`); t+=`Total gastos: ${money(tg)}\n\nINGRESOS\n`; data.ingresos.forEach(x=>t+=`- ${x.nombre}: ${money(x.valor)}\n`); t+=`Total ingresos: ${money(ti)}`; return t; }
+function resumenTexto(){ const fecha=$('fecha').value; data.ventaDia=parseMoneyInput($('ventaDia').value||0); const te=data.entradas.reduce((a,b)=>a+Number(b.valor||0),0); const tg=data.gastos.reduce((a,b)=>a+Number(b.valor||0),0); const ti=data.ingresos.reduce((a,b)=>a+Number(b.valor||0),0); let t=`LIBRETA DIGITAL VDC360\nFecha: ${fecha}\n\nVENTA DEL DÍA: ${money(data.ventaDia)}\n\nENTRADAS\n`; data.entradas.forEach(x=>t+=`- ${x.nombre}: ${num(x.valor)} kg\n`); t+=`Total entradas: ${num(te)} kg\n\nGASTOS\n`; data.gastos.forEach(x=>t+=`- ${x.nombre}: ${money(x.valor)}\n`); t+=`Total gastos: ${money(tg)}\n\nINGRESOS\n`; data.ingresos.forEach(x=>t+=`- ${x.nombre}: ${money(x.valor)}\n`); t+=`Total ingresos: ${money(ti)}`; return t; }
 function mandarWhatsApp(){ window.open('https://wa.me/?text='+encodeURIComponent(resumenTexto()),'_blank'); }
-function exportarCSV(){ data.ventaDia=Number($('ventaDia').value||0); guardar(); let rows=[['Fecha','Tipo','Concepto/Producto','Valor']]; rows.push([$('fecha').value,'venta_del_dia','',data.ventaDia]); ['entradas','gastos','ingresos'].forEach(k=>data[k].forEach(x=>rows.push([$('fecha').value,k,x.nombre,x.valor]))); const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='libreta_vdc360_'+$('fecha').value+'.csv'; a.click(); }
+function exportarCSV(){ data.ventaDia=parseMoneyInput($('ventaDia').value||0); guardar(); let rows=[['Fecha','Tipo','Concepto/Producto','Valor']]; rows.push([$('fecha').value,'venta_del_dia','',data.ventaDia]); ['entradas','gastos','ingresos'].forEach(k=>data[k].forEach(x=>rows.push([$('fecha').value,k,x.nombre,x.valor]))); const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='libreta_vdc360_'+$('fecha').value+'.csv'; a.click(); }
 $('nombre').addEventListener('input', aplicarPesoAzul); $('nombre').addEventListener('change', aplicarPesoAzul);
-$('fecha').value=hoy(); $('fecha').addEventListener('change',cargar); $('ventaDia').addEventListener('input',guardar); document.addEventListener('keydown',e=>{ if(e.key==='Escape') cerrarModal(); if(e.key==='Enter' && $('modal').classList.contains('show')) guardarMovimiento(); }); cargar();
+$('fecha').value=hoy();
+$('fecha').addEventListener('change',cargar);
+$('ventaDia').addEventListener('focus',prepararEdicionVentaDia);
+$('ventaDia').addEventListener('input',guardarVentaDiaSinFormatear);
+$('ventaDia').addEventListener('blur',()=>{ formatearVentaDia(); guardar(); });
+$('ventaDia').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    $('ventaDia').blur();
+  }
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') cerrarModal(); if(e.key==='Enter' && $('modal').classList.contains('show')) guardarMovimiento(); }); cargar();
 </script>
 </body>
 </html>
