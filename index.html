@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Libreta Digital VDC360 V2</title>
+<title>Libreta Digital VDC360 V3</title>
 <style>
 :root{
   --paper:#fbf4df;
@@ -26,7 +26,7 @@ body{padding:14px}
 h1{font-size:26px;letter-spacing:.5px;margin:0;font-weight:900}.dateBox{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:800}
 .dateBox input{font-size:17px;border:1px solid var(--line);background:transparent;border-radius:8px;padding:7px 8px;color:var(--ink);font-weight:800}
 .tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.tool{border:1px solid var(--line);background:rgba(255,255,255,.25);border-radius:9px;padding:7px 9px;font-size:15px;cursor:pointer;color:var(--ink)}.tool:active{transform:scale(.97)}
-.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px}.card{border:1px solid var(--line);background:rgba(255,255,255,.22);border-radius:12px;padding:10px}.label{font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:800;letter-spacing:.5px}.value{font-size:22px;font-weight:900;margin-top:4px}.saldo input{width:100%;font-size:22px;font-weight:900;border:0;border-bottom:2px solid var(--line);background:transparent;color:var(--ink);outline:none;padding:2px}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.card{border:1px solid var(--line);background:rgba(255,255,255,.22);border-radius:12px;padding:10px}.label{font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:800;letter-spacing:.5px}.value{font-size:22px;font-weight:900;margin-top:4px}.saldo input{width:100%;font-size:22px;font-weight:900;border:0;border-bottom:2px solid var(--line);background:transparent;color:var(--ink);outline:none;padding:2px}.ventaDia{border:2px solid rgba(49,85,117,.35);background:rgba(49,85,117,.10)}.ventaDia .value{font-size:26px;color:var(--blue)}
 .notebook{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--line)}.col{min-height:620px;border-right:2px solid var(--line);display:flex;flex-direction:column;position:relative}.col:last-child{border-right:0}.colHead{padding:14px;text-align:center;font-size:23px;font-weight:900;border-bottom:3px solid var(--line);letter-spacing:.8px;color:white;text-shadow:0 1px 1px rgba(0,0,0,.18)}.entradas{background:linear-gradient(180deg,rgba(49,95,66,.13),rgba(49,95,66,.035) 220px,transparent)}.gastos{background:linear-gradient(180deg,rgba(139,52,52,.13),rgba(139,52,52,.035) 220px,transparent)}.ingresos{background:linear-gradient(180deg,rgba(49,85,117,.13),rgba(49,85,117,.035) 220px,transparent)}.entradas .colHead{background:var(--green);border-bottom-color:rgba(49,95,66,.55)}.gastos .colHead{background:var(--red);border-bottom-color:rgba(139,52,52,.55)}.ingresos .colHead{background:var(--blue);border-bottom-color:rgba(49,85,117,.55)}
 .subhead{display:grid;grid-template-columns:1.5fr .75fr 42px;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:13px;font-weight:900;color:var(--muted);text-transform:uppercase}.entradas .subhead{color:var(--green)}.gastos .subhead{color:var(--red)}.ingresos .subhead{color:var(--blue)}.rows{flex:1;background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 41px, rgba(80,65,35,.18) 42px);padding:0 8px 8px}.row{display:grid;grid-template-columns:1.5fr .75fr 42px;gap:8px;align-items:center;min-height:42px;padding:4px;border-bottom:1px solid rgba(80,65,35,.13)}.row .name{font-size:18px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.row .num{text-align:right;font-size:18px;font-weight:900}.row button{border:0;background:transparent;font-size:18px;cursor:pointer;color:#9b2f2f}.empty{height:42px;color:rgba(0,0,0,.25);font-size:15px;display:flex;align-items:center;padding-left:8px}.total{border-top:2px solid var(--line);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:19px;font-weight:900}.addBtn{margin:10px 14px 14px;border:0;border-radius:14px;font-size:20px;font-weight:900;padding:13px 10px;cursor:pointer;color:white;box-shadow:0 4px 10px rgba(0,0,0,.16)}.entradas .addBtn{background:var(--green)}.gastos .addBtn{background:var(--red)}.ingresos .addBtn{background:var(--blue)}.addBtn:active{transform:scale(.98)}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modal.show{display:flex}.box{width:min(420px,100%);background:var(--paper-2);border:2px solid #6f5c35;border-radius:16px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.25)}.box h2{margin:0 0 14px;font-size:24px}.field{margin:12px 0}.field label{display:block;font-size:14px;font-weight:900;color:var(--muted);text-transform:uppercase;margin-bottom:6px}.field input{width:100%;font-size:24px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fffdf4;color:var(--ink);outline:none}.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}.actions button{font-size:18px;font-weight:900;border-radius:12px;padding:11px 16px;border:1px solid var(--line);cursor:pointer}.save{background:var(--strong);color:white}.cancel{background:transparent;color:var(--ink)}
@@ -49,11 +49,10 @@ h1{font-size:26px;letter-spacing:.5px;margin:0;font-weight:900}.dateBox{display:
       </div>
     </div>
     <div class="summary">
-      <div class="card saldo"><div class="label">Saldo inicial</div><input id="saldoInicial" type="number" step="0.01" value="0"></div>
+      <div class="card ventaDia"><div class="label">Venta del día</div><div class="value" id="ventaDia">$0.00</div></div>
       <div class="card"><div class="label">Entradas</div><div class="value" id="totalEntradas">0.00 kg</div></div>
       <div class="card"><div class="label">Ingresos</div><div class="value" id="totalIngresos">$0.00</div></div>
       <div class="card"><div class="label">Gastos</div><div class="value" id="totalGastos">$0.00</div></div>
-      <div class="card"><div class="label">Saldo actual</div><div class="value" id="saldoActual">$0.00</div></div>
     </div>
   </div>
   <div class="notebook">
@@ -84,25 +83,66 @@ h1{font-size:26px;letter-spacing:.5px;margin:0;font-weight:900}.dateBox{display:
 <script>
 const productos = ['Azul','Hueso','Pulpas','Recorte','Chamorro','Plomo','Libro','Cuero','Menudo','Panza','Pata','Tripa','Bofe','Corazón','Lengua','Cachete','Cuajo'];
 const conceptos = ['Abonos','Sueldos','Oscar','Pablo','Vinagre','Medicamento','Almuerzo','Cloro Jabón','Refacción','Esparte Pastor','Gasolina','Casetas','Flete','Depósito','Transferencia','Efectivo','Cliente','Pago proveedor'];
-let data = {saldoInicial:0, entradas:[], gastos:[], ingresos:[]};
+let data = {entradas:[], gastos:[], ingresos:[]};
 let tipoActual = 'entrada';
 let editando = null;
 let ultimoBorrado = null;
 let toastTimer = null;
 const $ = id => document.getElementById(id);
 function hoy(){ const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
-function key(){ return 'libreta_vdc360_v2_' + $('fecha').value; }
+function keyV3(){ return 'libreta_vdc360_v3_' + $('fecha').value; }
+function keyV2(){ return 'libreta_vdc360_v2_' + $('fecha').value; }
+function keyBackupV2(){ return 'libreta_vdc360_backup_v2_' + $('fecha').value; }
+function key(){ return keyV3(); }
 function money(n){ return Number(n||0).toLocaleString('es-MX',{style:'currency',currency:'MXN'}); }
 function num(n){ return Number(n||0).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function cargar(){ const raw=localStorage.getItem(key()); data = raw ? JSON.parse(raw) : {saldoInicial:0, entradas:[], gastos:[], ingresos:[]}; $('saldoInicial').value=data.saldoInicial||0; render(); }
-function guardar(){ data.saldoInicial = Number($('saldoInicial').value||0); localStorage.setItem(key(), JSON.stringify(data)); render(); }
+function datosVacios(){ return {version:3, entradas:[], gastos:[], ingresos:[]}; }
+function normalizarDatos(obj){
+  obj = obj && typeof obj==='object' ? obj : {};
+  return {
+    version:3,
+    entradas:Array.isArray(obj.entradas)?obj.entradas:[],
+    gastos:Array.isArray(obj.gastos)?obj.gastos:[],
+    ingresos:Array.isArray(obj.ingresos)?obj.ingresos:[]
+  };
+}
+function cargar(){
+  const rawV3=localStorage.getItem(keyV3());
+  if(rawV3){
+    try{ data=normalizarDatos(JSON.parse(rawV3)); }
+    catch(e){ data=datosVacios(); }
+    render();
+    return;
+  }
+
+  const rawV2=localStorage.getItem(keyV2());
+  if(rawV2){
+    try{
+      localStorage.setItem(keyBackupV2(), rawV2);
+      data=normalizarDatos(JSON.parse(rawV2));
+      localStorage.setItem(keyV3(), JSON.stringify(data));
+      render();
+      mostrarToast('Datos anteriores cargados y respaldados.');
+      return;
+    }catch(e){
+      data=datosVacios();
+      render();
+      mostrarToast('No se pudieron leer los datos anteriores.');
+      return;
+    }
+  }
+
+  data=datosVacios();
+  render();
+}
+function guardar(){ data=normalizarDatos(data); localStorage.setItem(keyV3(), JSON.stringify(data)); render(); }
 function renderLista(tipo, id){ const cont=$(id); cont.innerHTML=''; const arr=data[tipo]; if(!arr.length){ cont.innerHTML='<div class="empty">Toca ＋ para agregar</div>'; return; } arr.forEach((x,i)=>{ const row=document.createElement('div'); row.className='row'; row.onclick=(e)=>{ if(e.target.tagName==='BUTTON')return; abrirModal(tipo.slice(0,-1), i); }; row.innerHTML=`<div class="name">${escapeHtml(x.nombre)}</div><div class="num">${tipo==='entradas'?num(x.valor):money(x.valor)}</div><button onclick="borrar('${tipo}',${i})">×</button>`; cont.appendChild(row); }); }
 
 function normalizarTexto(s){ return String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function esEntradaAzul(){ return tipoActual==='entrada' && normalizarTexto($('nombre').value)==='azul'; }
 function aplicarPesoAzul(){ if(esEntradaAzul()){ $('valor').value='27.22'; } }
 function seleccionarNombre(nombre){ $('nombre').value=nombre; aplicarPesoAzul(); }
-function render(){ renderLista('entradas','entradasRows'); renderLista('gastos','gastosRows'); renderLista('ingresos','ingresosRows'); const te=data.entradas.reduce((a,b)=>a+Number(b.valor||0),0); const tg=data.gastos.reduce((a,b)=>a+Number(b.valor||0),0); const ti=data.ingresos.reduce((a,b)=>a+Number(b.valor||0),0); $('totalEntradas').textContent=num(te)+' kg'; $('entradasTotalPie').textContent=num(te); $('totalGastos').textContent=money(tg); $('gastosTotalPie').textContent=money(tg); $('totalIngresos').textContent=money(ti); $('ingresosTotalPie').textContent=money(ti); $('saldoActual').textContent=money(Number(data.saldoInicial||0)+ti-tg); }
+function render(){ renderLista('entradas','entradasRows'); renderLista('gastos','gastosRows'); renderLista('ingresos','ingresosRows'); const te=data.entradas.reduce((a,b)=>a+Number(b.valor||0),0); const tg=data.gastos.reduce((a,b)=>a+Number(b.valor||0),0); const ti=data.ingresos.reduce((a,b)=>a+Number(b.valor||0),0); $('ventaDia').textContent=money(ti); $('totalEntradas').textContent=num(te)+' kg'; $('entradasTotalPie').textContent=num(te); $('totalGastos').textContent=money(tg); $('gastosTotalPie').textContent=money(tg); $('totalIngresos').textContent=money(ti); $('ingresosTotalPie').textContent=money(ti); }
 function abrirModal(tipo, index=null){
   tipoActual=tipo;
   editando=index;
@@ -164,20 +204,21 @@ function borrar(tipo,i){
 }
 function limpiarDia(){
   const respaldo=JSON.stringify(data);
-  localStorage.removeItem(key());
-  cargar();
+  localStorage.removeItem(keyV3());
+  data=datosVacios();
+  render();
   mostrarToast('Libreta del día limpiada.', ()=>{
-    data=JSON.parse(respaldo);
+    data=normalizarDatos(JSON.parse(respaldo));
     guardar();
     mostrarToast('Libreta restaurada.');
   });
 }
 function escapeHtml(s){ return String(s).replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
-function resumenTexto(){ const fecha=$('fecha').value; const te=data.entradas.reduce((a,b)=>a+Number(b.valor||0),0); const tg=data.gastos.reduce((a,b)=>a+Number(b.valor||0),0); const ti=data.ingresos.reduce((a,b)=>a+Number(b.valor||0),0); let t=`LIBRETA DIGITAL VDC360\nFecha: ${fecha}\n\nENTRADAS\n`; data.entradas.forEach(x=>t+=`- ${x.nombre}: ${num(x.valor)} kg\n`); t+=`Total entradas: ${num(te)} kg\n\nGASTOS\n`; data.gastos.forEach(x=>t+=`- ${x.nombre}: ${money(x.valor)}\n`); t+=`Total gastos: ${money(tg)}\n\nINGRESOS\n`; data.ingresos.forEach(x=>t+=`- ${x.nombre}: ${money(x.valor)}\n`); t+=`Total ingresos: ${money(ti)}\n\nSaldo inicial: ${money(data.saldoInicial)}\nSaldo actual: ${money(Number(data.saldoInicial||0)+ti-tg)}`; return t; }
+function resumenTexto(){ const fecha=$('fecha').value; const te=data.entradas.reduce((a,b)=>a+Number(b.valor||0),0); const tg=data.gastos.reduce((a,b)=>a+Number(b.valor||0),0); const ti=data.ingresos.reduce((a,b)=>a+Number(b.valor||0),0); let t=`LIBRETA DIGITAL VDC360\nFecha: ${fecha}\n\nVENTA DEL DÍA: ${money(ti)}\n\nENTRADAS\n`; data.entradas.forEach(x=>t+=`- ${x.nombre}: ${num(x.valor)} kg\n`); t+=`Total entradas: ${num(te)} kg\n\nGASTOS\n`; data.gastos.forEach(x=>t+=`- ${x.nombre}: ${money(x.valor)}\n`); t+=`Total gastos: ${money(tg)}\n\nINGRESOS\n`; data.ingresos.forEach(x=>t+=`- ${x.nombre}: ${money(x.valor)}\n`); t+=`Total ingresos: ${money(ti)}`; return t; }
 function mandarWhatsApp(){ window.open('https://wa.me/?text='+encodeURIComponent(resumenTexto()),'_blank'); }
-function exportarCSV(){ let rows=[['Fecha','Tipo','Concepto/Producto','Valor']]; ['entradas','gastos','ingresos'].forEach(k=>data[k].forEach(x=>rows.push([$('fecha').value,k,x.nombre,x.valor]))); rows.push([$('fecha').value,'saldo_inicial','',data.saldoInicial]); const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='libreta_vdc360_'+$('fecha').value+'.csv'; a.click(); }
+function exportarCSV(){ let rows=[['Fecha','Tipo','Concepto/Producto','Valor']]; ['entradas','gastos','ingresos'].forEach(k=>data[k].forEach(x=>rows.push([$('fecha').value,k,x.nombre,x.valor]))); const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='libreta_vdc360_'+$('fecha').value+'.csv'; a.click(); }
 $('nombre').addEventListener('input', aplicarPesoAzul); $('nombre').addEventListener('change', aplicarPesoAzul);
-$('fecha').value=hoy(); $('fecha').addEventListener('change',cargar); $('saldoInicial').addEventListener('input',guardar); document.addEventListener('keydown',e=>{ if(e.key==='Escape') cerrarModal(); if(e.key==='Enter' && $('modal').classList.contains('show')) guardarMovimiento(); }); cargar();
+$('fecha').value=hoy(); $('fecha').addEventListener('change',cargar); document.addEventListener('keydown',e=>{ if(e.key==='Escape') cerrarModal(); if(e.key==='Enter' && $('modal').classList.contains('show')) guardarMovimiento(); }); cargar();
 </script>
 </body>
 </html>
