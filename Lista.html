@@ -1,0 +1,636 @@
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Despiece de Cerdo VDC360</title>
+  <style>
+    :root{
+      --fondo:#f3efe4;
+      --papel:#fffdf6;
+      --linea:#d7d0bd;
+      --texto:#262626;
+      --verde:#0d6b3f;
+      --verde2:#0a5734;
+      --rojo:#a42a2a;
+      --gris:#6d6d6d;
+      --sombra:0 10px 30px rgba(0,0,0,.10);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:var(--fondo);
+      color:var(--texto);
+      font-family:Arial, Helvetica, sans-serif;
+      min-height:100vh;
+    }
+
+    .app{
+      max-width:1100px;
+      margin:0 auto;
+      padding:16px;
+    }
+
+    .hoja{
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 47px,
+          rgba(82,119,156,.13) 48px
+        ),
+        var(--papel);
+      border:1px solid #ddd5c1;
+      border-radius:22px;
+      box-shadow:var(--sombra);
+      overflow:hidden;
+      min-height:calc(100vh - 32px);
+    }
+
+    .encabezado{
+      padding:18px 20px 14px;
+      border-bottom:2px solid #ddd5c1;
+      background:rgba(255,253,246,.96);
+      position:sticky;
+      top:0;
+      z-index:5;
+    }
+
+    .barra-superior{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(22px,3vw,34px);
+      color:#222;
+    }
+
+    .acciones{
+      display:flex;
+      gap:7px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn-mini{
+      border:1px solid #d1c9b7;
+      background:#fff;
+      color:#333;
+      border-radius:10px;
+      padding:8px 10px;
+      font-size:13px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .datos{
+      display:grid;
+      grid-template-columns:1fr 1.4fr .9fr;
+      gap:12px;
+    }
+
+    label{
+      display:block;
+      font-size:14px;
+      font-weight:800;
+      margin-bottom:6px;
+    }
+
+    input, select{
+      width:100%;
+      min-height:50px;
+      border:1px solid #cfc7b5;
+      border-radius:12px;
+      background:#fff;
+      padding:10px 12px;
+      font-size:18px;
+      color:#222;
+      outline:none;
+    }
+
+    input:focus, select:focus{
+      border-color:var(--verde);
+      box-shadow:0 0 0 3px rgba(13,107,63,.12);
+    }
+
+    .captura{
+      display:grid;
+      grid-template-columns:1.6fr .8fr auto;
+      gap:12px;
+      align-items:end;
+      padding:18px 20px;
+      background:rgba(255,253,246,.92);
+      border-bottom:1px solid #ddd5c1;
+    }
+
+    .btn-agregar{
+      min-height:50px;
+      border:0;
+      border-radius:12px;
+      background:var(--verde);
+      color:#fff;
+      padding:0 24px;
+      font-size:18px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .btn-agregar:active{background:var(--verde2)}
+
+    .contenido{
+      padding:0 20px 24px;
+    }
+
+    .cabecera-lista,
+    .fila{
+      display:grid;
+      grid-template-columns:1fr 150px 100px;
+      gap:12px;
+      align-items:center;
+    }
+
+    .cabecera-lista{
+      min-height:48px;
+      font-size:14px;
+      font-weight:900;
+      color:#555;
+      border-bottom:2px solid #bfb6a3;
+    }
+
+    .fila{
+      min-height:56px;
+      border-bottom:1px solid rgba(143,132,111,.30);
+      font-size:19px;
+    }
+
+    .producto{
+      font-weight:800;
+      word-break:break-word;
+    }
+
+    .peso{
+      text-align:right;
+      font-weight:900;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .fila-acciones{
+      display:flex;
+      justify-content:flex-end;
+      gap:5px;
+    }
+
+    .icono{
+      border:1px solid #d4ccba;
+      background:#fff;
+      border-radius:9px;
+      width:42px;
+      height:38px;
+      cursor:pointer;
+      font-size:17px;
+    }
+
+    .icono.eliminar{color:var(--rojo)}
+
+    .vacio{
+      padding:36px 10px;
+      text-align:center;
+      color:#777;
+      font-size:18px;
+    }
+
+    .pie{
+      display:flex;
+      justify-content:flex-end;
+      padding:18px 20px 22px;
+      background:rgba(255,253,246,.95);
+      border-top:2px solid #c8bfac;
+      position:sticky;
+      bottom:0;
+    }
+
+    .total{
+      min-width:280px;
+      text-align:right;
+    }
+
+    .total small{
+      display:block;
+      color:#666;
+      font-size:14px;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+
+    .total strong{
+      font-size:clamp(27px,4vw,42px);
+      color:var(--verde);
+      font-variant-numeric:tabular-nums;
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.48);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:20;
+    }
+
+    .modal.activo{display:flex}
+
+    .modal-caja{
+      width:min(480px,100%);
+      background:#fff;
+      border-radius:18px;
+      padding:20px;
+      box-shadow:0 20px 50px rgba(0,0,0,.25);
+    }
+
+    .modal-caja h2{margin:0 0 18px}
+
+    .modal-botones{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      margin-top:18px;
+    }
+
+    .btn-secundario,
+    .btn-guardar{
+      border:0;
+      border-radius:10px;
+      min-height:46px;
+      padding:0 18px;
+      font-size:16px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .btn-secundario{background:#ececec}
+    .btn-guardar{background:var(--verde);color:#fff}
+
+    @media (max-width:760px){
+      .app{padding:0}
+      .hoja{border-radius:0;min-height:100vh}
+      .encabezado{position:static}
+      .barra-superior{align-items:flex-start}
+      .datos{grid-template-columns:1fr}
+      .captura{grid-template-columns:1fr 1fr}
+      .btn-agregar{grid-column:1/-1}
+      .cabecera-lista,.fila{grid-template-columns:1fr 105px 90px}
+      .contenido{padding-left:12px;padding-right:12px}
+      .encabezado,.captura{padding-left:14px;padding-right:14px}
+    }
+
+    @media (max-width:520px){
+      .barra-superior{display:block}
+      .acciones{justify-content:flex-start;margin-top:10px}
+      .captura{grid-template-columns:1fr}
+      .cabecera-lista{display:none}
+      .fila{
+        grid-template-columns:1fr auto;
+        gap:6px 10px;
+        padding:10px 0;
+      }
+      .producto{grid-column:1}
+      .peso{grid-column:2;grid-row:1;text-align:right}
+      .fila-acciones{grid-column:1/-1;justify-content:flex-end}
+      .pie{justify-content:center}
+      .total{text-align:center;min-width:0}
+    }
+
+    @media print{
+      body{background:#fff}
+      .app{max-width:none;padding:0}
+      .hoja{box-shadow:none;border:0;border-radius:0}
+      .acciones,.captura,.fila-acciones{display:none!important}
+      .encabezado{position:static}
+      .pie{position:static}
+      .fila,.cabecera-lista{grid-template-columns:1fr 180px}
+      .fila > :last-child,.cabecera-lista > :last-child{display:none}
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hoja">
+      <header class="encabezado">
+        <div class="barra-superior">
+          <h1>Despiece de Cerdo</h1>
+          <div class="acciones">
+            <button class="btn-mini" id="btnCSV">Exportar</button>
+            <button class="btn-mini" id="btnWhatsApp">WhatsApp</button>
+            <button class="btn-mini" onclick="window.print()">Imprimir</button>
+          </div>
+        </div>
+
+        <div class="datos">
+          <div>
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha">
+          </div>
+          <div>
+            <label for="cliente">Cliente</label>
+            <input type="text" id="cliente" placeholder="Nombre del cliente">
+          </div>
+          <div>
+            <label for="pesoInicial">Peso inicial (opcional)</label>
+            <input type="number" id="pesoInicial" inputmode="decimal" step="0.001" min="0" placeholder="0.000">
+          </div>
+        </div>
+      </header>
+
+      <section class="captura">
+        <div>
+          <label for="producto">Producto</label>
+          <input id="producto" list="catalogoProductos" placeholder="Selecciona o escribe">
+          <datalist id="catalogoProductos">
+            <option value="Pierna negra">
+            <option value="Aguayón">
+            <option value="Chambarete">
+            <option value="Pierna blanca">
+            <option value="Bola">
+            <option value="T-bone">
+            <option value="Hueso">
+            <option value="Pecho">
+            <option value="Manzana">
+            <option value="Costilla">
+            <option value="Chuleta">
+            <option value="Pescuezo">
+            <option value="Espaldilla">
+            <option value="Diezmillo">
+            <option value="Pierna de chorizo">
+            <option value="Sebo">
+            <option value="Deshebrada">
+            <option value="Pierna cocida">
+          </datalist>
+        </div>
+
+        <div>
+          <label for="kilos">Kilos</label>
+          <input type="number" id="kilos" inputmode="decimal" step="0.001" min="0" placeholder="0.000">
+        </div>
+
+        <button class="btn-agregar" id="btnAgregar">Agregar</button>
+      </section>
+
+      <section class="contenido">
+        <div class="cabecera-lista">
+          <div>Producto</div>
+          <div style="text-align:right">Kilos</div>
+          <div></div>
+        </div>
+
+        <div id="lista"></div>
+      </section>
+
+      <footer class="pie">
+        <div class="total">
+          <small>Total registrado</small>
+          <strong id="totalKilos">0.000 kg</strong>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <div class="modal" id="modalEditar">
+    <div class="modal-caja">
+      <h2>Editar renglón</h2>
+      <div style="margin-bottom:14px">
+        <label for="editarProducto">Producto</label>
+        <input id="editarProducto" list="catalogoProductos">
+      </div>
+      <div>
+        <label for="editarKilos">Kilos</label>
+        <input type="number" id="editarKilos" inputmode="decimal" step="0.001" min="0">
+      </div>
+      <div class="modal-botones">
+        <button class="btn-secundario" id="cancelarEdicion">Cancelar</button>
+        <button class="btn-guardar" id="guardarEdicion">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fecha = document.getElementById('fecha');
+    const cliente = document.getElementById('cliente');
+    const pesoInicial = document.getElementById('pesoInicial');
+    const producto = document.getElementById('producto');
+    const kilos = document.getElementById('kilos');
+    const lista = document.getElementById('lista');
+    const totalKilos = document.getElementById('totalKilos');
+
+    let registros = [];
+    let indiceEdicion = null;
+
+    function fechaLocalISO(){
+      const ahora = new Date();
+      const offset = ahora.getTimezoneOffset();
+      return new Date(ahora.getTime() - offset * 60000).toISOString().slice(0,10);
+    }
+
+    fecha.value = fechaLocalISO();
+
+    function claveActual(){
+      return `despiece_cerdo_vdc360_${fecha.value}`;
+    }
+
+    function cargar(){
+      const guardado = JSON.parse(localStorage.getItem(claveActual()) || '{}');
+      cliente.value = guardado.cliente || '';
+      pesoInicial.value = guardado.pesoInicial || '';
+      registros = Array.isArray(guardado.registros) ? guardado.registros : [];
+      render();
+    }
+
+    function guardar(){
+      localStorage.setItem(claveActual(), JSON.stringify({
+        cliente: cliente.value.trim(),
+        pesoInicial: pesoInicial.value,
+        registros
+      }));
+    }
+
+    function formatoKg(valor){
+      return Number(valor).toLocaleString('es-MX',{
+        minimumFractionDigits:3,
+        maximumFractionDigits:3
+      }) + ' kg';
+    }
+
+    function render(){
+      if(registros.length === 0){
+        lista.innerHTML = '<div class="vacio">Todavía no hay productos registrados.</div>';
+      }else{
+        lista.innerHTML = registros.map((r,i)=>`
+          <div class="fila">
+            <div class="producto">${escapar(r.producto)}</div>
+            <div class="peso">${formatoKg(r.kilos)}</div>
+            <div class="fila-acciones">
+              <button class="icono" onclick="editar(${i})" title="Editar">✏️</button>
+              <button class="icono eliminar" onclick="eliminar(${i})" title="Eliminar">🗑️</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const total = registros.reduce((s,r)=>s + Number(r.kilos || 0),0);
+      totalKilos.textContent = formatoKg(total);
+      guardar();
+    }
+
+    function escapar(texto){
+      return String(texto)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'","&#039;");
+    }
+
+    function agregar(){
+      const nombre = producto.value.trim();
+      const peso = Number(kilos.value);
+
+      if(!nombre){
+        producto.focus();
+        return;
+      }
+
+      if(!Number.isFinite(peso) || peso <= 0){
+        kilos.focus();
+        return;
+      }
+
+      registros.push({
+        producto:nombre,
+        kilos:peso
+      });
+
+      producto.value = '';
+      kilos.value = '';
+      render();
+      producto.focus();
+    }
+
+    window.editar = function(i){
+      indiceEdicion = i;
+      document.getElementById('editarProducto').value = registros[i].producto;
+      document.getElementById('editarKilos').value = registros[i].kilos;
+      document.getElementById('modalEditar').classList.add('activo');
+      setTimeout(()=>document.getElementById('editarProducto').focus(),100);
+    }
+
+    window.eliminar = function(i){
+      if(confirm('¿Eliminar este renglón?')){
+        registros.splice(i,1);
+        render();
+      }
+    }
+
+    document.getElementById('btnAgregar').addEventListener('click', agregar);
+
+    kilos.addEventListener('keydown', e=>{
+      if(e.key === 'Enter') agregar();
+    });
+
+    producto.addEventListener('keydown', e=>{
+      if(e.key === 'Enter') kilos.focus();
+    });
+
+    cliente.addEventListener('input', guardar);
+    pesoInicial.addEventListener('input', guardar);
+
+    fecha.addEventListener('change', cargar);
+
+    document.getElementById('cancelarEdicion').addEventListener('click', ()=>{
+      document.getElementById('modalEditar').classList.remove('activo');
+      indiceEdicion = null;
+    });
+
+    document.getElementById('guardarEdicion').addEventListener('click', ()=>{
+      const nuevoProducto = document.getElementById('editarProducto').value.trim();
+      const nuevoPeso = Number(document.getElementById('editarKilos').value);
+
+      if(!nuevoProducto || !Number.isFinite(nuevoPeso) || nuevoPeso <= 0) return;
+
+      registros[indiceEdicion] = {
+        producto:nuevoProducto,
+        kilos:nuevoPeso
+      };
+
+      document.getElementById('modalEditar').classList.remove('activo');
+      indiceEdicion = null;
+      render();
+    });
+
+    document.getElementById('modalEditar').addEventListener('click', e=>{
+      if(e.target.id === 'modalEditar'){
+        e.currentTarget.classList.remove('activo');
+      }
+    });
+
+    document.getElementById('btnCSV').addEventListener('click', ()=>{
+      if(!registros.length){
+        alert('No hay registros para exportar.');
+        return;
+      }
+
+      const filas = [
+        ['Fecha', fecha.value],
+        ['Cliente', cliente.value.trim()],
+        ['Peso inicial', pesoInicial.value],
+        [],
+        ['Producto','Kilos'],
+        ...registros.map(r=>[r.producto, Number(r.kilos).toFixed(3)]),
+        [],
+        ['Total', registros.reduce((s,r)=>s+Number(r.kilos),0).toFixed(3)]
+      ];
+
+      const csv = filas.map(f=>f.map(v=>`"${String(v ?? '').replaceAll('"','""')}"`).join(',')).join('\n');
+      const blob = new Blob(["\ufeff"+csv],{type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `despiece_${fecha.value}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('btnWhatsApp').addEventListener('click', ()=>{
+      const total = registros.reduce((s,r)=>s+Number(r.kilos),0);
+      const lineas = [
+        '*DESPIECE DE CERDO*',
+        `Fecha: ${fecha.value}`,
+        cliente.value.trim() ? `Cliente: ${cliente.value.trim()}` : '',
+        pesoInicial.value ? `Peso inicial: ${Number(pesoInicial.value).toFixed(3)} kg` : '',
+        '',
+        ...registros.map((r,i)=>`${i+1}. ${r.producto}: ${Number(r.kilos).toFixed(3)} kg`),
+        '',
+        `*TOTAL: ${total.toFixed(3)} kg*`
+      ].filter(Boolean);
+
+      window.open(`https://wa.me/?text=${encodeURIComponent(lineas.join('\n'))}`,'_blank');
+    });
+
+    cargar();
+  </script>
+</body>
+</html>
+'''
+
+path = Path('/mnt/data/despiece_cerdo_vdc360.html')
+path.write_text(html, encoding='utf-8')
+print(f'Archivo creado: {path}')
