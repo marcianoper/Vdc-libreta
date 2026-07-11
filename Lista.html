@@ -11,16 +11,13 @@
 .encabezado{padding:18px 24px;border-bottom:1px solid var(--linea)}.superior{display:flex;justify-content:space-between;gap:12px;align-items:center}.superior h1{margin:0;font-size:34px}.acciones{display:flex;gap:8px;flex-wrap:wrap}.mini{border:1px solid #d2c9b7;background:#fff;border-radius:11px;padding:9px 13px;font-weight:800;font-size:14px}
 .datos{display:grid;grid-template-columns:1fr 1.4fr .9fr;gap:14px;margin-top:16px}label{display:block;font-weight:900;margin-bottom:7px}input,button{font:inherit}input{width:100%;min-height:54px;border:1px solid #cfc7b5;border-radius:13px;padding:11px 14px;font-size:20px;background:#fff}
 .captura{display:grid;grid-template-columns:1.5fr .8fr auto;gap:14px;align-items:end;padding:20px 24px;border-bottom:1px solid var(--linea)}
-.selector{width:100%;min-height:54px;border:1px solid #cfc7b5;border-radius:13px;background:#fff;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;font-size:20px;text-align:left;color:#777}.selector.seleccionado{color:#222;font-weight:900;border-color:var(--verde)}.selector span:last-child{font-size:28px;line-height:1}
+.combo{position:relative}.combo-input{padding-right:48px;font-weight:800}.combo-flecha{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:22px;color:#444;pointer-events:none}.combo-lista{display:none;position:absolute;left:0;right:0;top:calc(100% + 7px);max-height:310px;overflow-y:auto;background:#fff;border:1px solid #bfd0df;border-radius:14px;box-shadow:0 14px 28px rgba(0,0,0,.18);z-index:18}.combo.abierto .combo-lista{display:block}.combo-opcion{display:block;width:100%;min-height:58px;border:0;border-bottom:1px solid #e7edf2;background:#fff;text-align:left;padding:12px 18px;font-size:18px;font-weight:900;color:#172033}.combo-opcion:last-child{border-bottom:0}.combo-opcion:active,.combo-opcion:hover{background:#eef7f2}.combo-vacio{padding:18px;color:#777;font-weight:700}
 .agregar{min-height:54px;border:0;border-radius:13px;background:var(--verde);color:#fff;padding:0 28px;font-size:20px;font-weight:900}
 .contenido{padding:0 24px 26px}.cabecera,.fila{display:grid;grid-template-columns:1fr 150px 100px;gap:12px;align-items:center}.cabecera{height:54px;font-weight:900;color:#555;border-bottom:2px solid #bfb6a3}.fila{min-height:60px;border-bottom:1px solid rgba(143,132,111,.28);font-size:20px}.producto{font-weight:900}.peso{text-align:right;font-weight:900}.fila-acciones{display:flex;justify-content:flex-end;gap:6px}.icono{width:44px;height:40px;border:1px solid #d4ccba;border-radius:10px;background:#fff}.eliminar{color:var(--rojo)}.vacio{text-align:center;color:#777;padding:42px 10px;font-size:18px}
 .pie{display:flex;justify-content:flex-end;padding:20px 24px;border-top:2px solid #c8bfac}.total{text-align:right}.total small{display:block;font-weight:900;color:#666}.total strong{display:block;font-size:42px;color:var(--verde);margin-top:4px}
-.panel{position:fixed;inset:0;background:rgba(0,0,0,.48);display:none;align-items:flex-end;justify-content:center;z-index:20}.panel.activo{display:flex}.panel-caja{width:min(920px,100%);max-height:88vh;overflow:auto;background:#fffdf8;border-radius:24px 24px 0 0;padding:20px;box-shadow:0 -12px 35px rgba(0,0,0,.25)}
-.panel-top{display:flex;justify-content:space-between;align-items:center;gap:12px}.panel-top h2{margin:0;font-size:28px}.cerrar{width:50px;height:46px;border:0;border-radius:12px;background:#eee8dc;font-size:22px}.buscar{margin:16px 0}.grid-productos{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}.producto-btn{min-height:66px;border:1px solid #d3cab8;border-radius:14px;background:#fff;font-size:18px;font-weight:900;padding:8px}.producto-btn:active,.producto-btn.sel{background:var(--verde);color:#fff;border-color:var(--verde)}
-.otro{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--linea)}.usar{border:0;border-radius:12px;background:var(--verde);color:#fff;padding:0 20px;font-weight:900}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.48);display:none;align-items:center;justify-content:center;padding:18px;z-index:30}.modal.activo{display:flex}.modal-caja{width:min(480px,100%);background:#fff;border-radius:18px;padding:20px}.modal-botones{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.secundario,.guardar{border:0;border-radius:10px;padding:12px 18px;font-weight:900}.secundario{background:#eee}.guardar{background:var(--verde);color:#fff}
-@media(max-width:800px){.app{padding:0}.hoja{border-radius:0;min-height:100vh}.datos{grid-template-columns:1fr 1fr}.datos>div:last-child{grid-column:1/-1}.captura{grid-template-columns:1.4fr .7fr}.agregar{grid-column:1/-1}.grid-productos{grid-template-columns:repeat(3,1fr)}.superior h1{font-size:30px}}
-@media(max-width:560px){.superior{display:block}.acciones{margin-top:10px}.datos,.captura{grid-template-columns:1fr}.datos>div:last-child{grid-column:auto}.cabecera{display:none}.fila{grid-template-columns:1fr auto;gap:6px 10px;padding:10px 0}.peso{grid-column:2;grid-row:1}.fila-acciones{grid-column:1/-1}.grid-productos{grid-template-columns:repeat(2,1fr)}.producto-btn{min-height:58px;font-size:16px}.pie{justify-content:center}.total{text-align:center}}
+@media(max-width:800px){.app{padding:0}.hoja{border-radius:0;min-height:100vh}.datos{grid-template-columns:1fr 1fr}.datos>div:last-child{grid-column:1/-1}.captura{grid-template-columns:1.4fr .7fr}.agregar{grid-column:1/-1}.superior h1{font-size:30px}}
+@media(max-width:560px){.superior{display:block}.acciones{margin-top:10px}.datos,.captura{grid-template-columns:1fr}.datos>div:last-child{grid-column:auto}.cabecera{display:none}.fila{grid-template-columns:1fr auto;gap:6px 10px;padding:10px 0}.peso{grid-column:2;grid-row:1}.fila-acciones{grid-column:1/-1}.pie{justify-content:center}.total{text-align:center}}
 @media print{body{background:#fff}.app{max-width:none;padding:0}.hoja{border:0;border-radius:0;box-shadow:none}.acciones,.captura,.fila-acciones{display:none!important}.fila,.cabecera{grid-template-columns:1fr 180px}.fila>:last-child,.cabecera>:last-child{display:none}}
 </style>
 </head>
@@ -31,7 +28,7 @@
   <div class="datos"><div><label>Fecha</label><input type="date" id="fecha"></div><div><label>Cliente</label><input id="cliente" placeholder="Nombre del cliente"></div><div><label>Peso inicial (opcional)</label><input type="number" id="pesoInicial" inputmode="decimal" step="0.001" placeholder="0.000"></div></div>
 </header>
 <section class="captura">
-  <div><label>Producto</label><button class="selector" id="abrirProductos" type="button"><span id="productoTexto">Seleccionar producto</span><span>›</span></button><input type="hidden" id="producto"></div>
+  <div><label>Producto</label><div class="combo" id="comboNuevo"><input class="combo-input" id="producto" autocomplete="off" placeholder="Escribe para buscar producto..."><span class="combo-flecha">⌄</span><div class="combo-lista" id="listaProductos"></div></div></div>
   <div><label>Kilos</label><input type="number" id="kilos" inputmode="decimal" step="0.001" placeholder="0.000"></div>
   <button class="agregar" id="btnAgregar">Agregar</button>
 </section>
@@ -39,19 +36,12 @@
 <footer class="pie"><div class="total"><small>Total registrado</small><strong id="totalKilos">0.000 kg</strong></div></footer>
 </section></main>
 
-<div class="panel" id="panelProductos"><div class="panel-caja">
-  <div class="panel-top"><h2>Seleccionar producto</h2><button class="cerrar" id="cerrarProductos">✕</button></div>
-  <input class="buscar" id="buscarProducto" type="search" placeholder="Buscar producto...">
-  <div class="grid-productos" id="gridProductos"></div>
-  <div class="otro"><input id="otroProducto" placeholder="Escribir otro producto"><button class="usar" id="usarOtro">Usar</button></div>
-</div></div>
-
-<div class="modal" id="modalEditar"><div class="modal-caja"><h2>Editar renglón</h2><div style="margin-bottom:14px"><label>Producto</label><button class="selector" id="abrirProductosEditar" type="button"><span id="editarProductoTexto">Seleccionar producto</span><span>›</span></button><input type="hidden" id="editarProducto"></div><div><label>Kilos</label><input type="number" id="editarKilos" inputmode="decimal" step="0.001"></div><div class="modal-botones"><button class="secundario" id="cancelarEdicion">Cancelar</button><button class="guardar" id="guardarEdicion">Guardar</button></div></div></div>
+<div class="modal" id="modalEditar"><div class="modal-caja"><h2>Editar renglón</h2><div style="margin-bottom:14px"><label>Producto</label><div class="combo" id="comboEditar"><input class="combo-input" id="editarProducto" autocomplete="off" placeholder="Escribe para buscar producto..."><span class="combo-flecha">⌄</span><div class="combo-lista" id="listaProductosEditar"></div></div></div><div><label>Kilos</label><input type="number" id="editarKilos" inputmode="decimal" step="0.001"></div><div class="modal-botones"><button class="secundario" id="cancelarEdicion">Cancelar</button><button class="guardar" id="guardarEdicion">Guardar</button></div></div></div>
 
 <script>
 const $=id=>document.getElementById(id);
 const productos=['Pierna negra','Aguayón','Chambarete','Pierna blanca','Bola','T-bone','Hueso','Pecho','Manzana','Costilla','Chuleta','Pescuezo','Espaldilla','Diezmillo','Pierna de chorizo','Sebo','Deshebrada','Pierna cocida','Panza'];
-let registros=[],indiceEdicion=null,modo='nuevo';
+let registros=[],indiceEdicion=null;
 const fecha=$('fecha'),cliente=$('cliente'),pesoInicial=$('pesoInicial'),producto=$('producto'),kilos=$('kilos');
 function hoy(){const d=new Date(),o=d.getTimezoneOffset();return new Date(d-o*60000).toISOString().slice(0,10)}
 fecha.value=hoy();
@@ -61,15 +51,30 @@ function formato(v){return Number(v).toLocaleString('es-MX',{minimumFractionDigi
 function guardar(){localStorage.setItem(clave(),JSON.stringify({cliente:cliente.value.trim(),pesoInicial:pesoInicial.value,registros}))}
 function cargar(){const d=JSON.parse(localStorage.getItem(clave())||'{}');cliente.value=d.cliente||'';pesoInicial.value=d.pesoInicial||'';registros=Array.isArray(d.registros)?d.registros:[];render()}
 function render(){const lista=$('lista');lista.innerHTML=registros.length?registros.map((r,i)=>`<div class="fila"><div class="producto">${escapar(r.producto)}</div><div class="peso">${formato(r.kilos)}</div><div class="fila-acciones"><button class="icono" onclick="editar(${i})">✏️</button><button class="icono eliminar" onclick="eliminar(${i})">🗑️</button></div></div>`).join(''):'<div class="vacio">Todavía no hay productos registrados.</div>';$('totalKilos').textContent=formato(registros.reduce((s,r)=>s+Number(r.kilos||0),0));guardar()}
-function abrirPanel(tipo){modo=tipo;$('buscarProducto').value='';$('otroProducto').value='';pintarProductos();$('panelProductos').classList.add('activo')}
-function cerrarPanel(){$('panelProductos').classList.remove('activo')}
-function pintarProductos(f=''){const actual=modo==='nuevo'?producto.value:$('editarProducto').value;const q=f.toLowerCase().trim();$('gridProductos').innerHTML=productos.filter(p=>p.toLowerCase().includes(q)).map(p=>`<button class="producto-btn ${p===actual?'sel':''}" data-p="${escapar(p)}">${escapar(p)}</button>`).join('');document.querySelectorAll('.producto-btn').forEach(b=>b.onclick=()=>seleccionar(b.dataset.p))}
-function seleccionar(nombre){if(modo==='nuevo'){producto.value=nombre;$('productoTexto').textContent=nombre;$('abrirProductos').classList.add('seleccionado');cerrarPanel();setTimeout(()=>kilos.focus(),80)}else{$('editarProducto').value=nombre;$('editarProductoTexto').textContent=nombre;$('abrirProductosEditar').classList.add('seleccionado');cerrarPanel()}}
-function agregar(){const n=producto.value.trim(),p=Number(kilos.value);if(!n){abrirPanel('nuevo');return}if(!Number.isFinite(p)||p<=0){kilos.focus();return}registros.push({producto:n,kilos:p});producto.value='';$('productoTexto').textContent='Seleccionar producto';$('abrirProductos').classList.remove('seleccionado');kilos.value='';render();setTimeout(()=>$('abrirProductos').focus(),50)}
-window.editar=i=>{indiceEdicion=i;$('editarProducto').value=registros[i].producto;$('editarProductoTexto').textContent=registros[i].producto;$('abrirProductosEditar').classList.add('seleccionado');$('editarKilos').value=registros[i].kilos;$('modalEditar').classList.add('activo')}
+function abrirCombo(combo){combo.classList.add('abierto')}
+function cerrarCombos(){document.querySelectorAll('.combo.abierto').forEach(c=>c.classList.remove('abierto'))}
+function pintarCombo(input,contenedor){
+  const q=input.value.toLowerCase().trim();
+  const coincidencias=productos.filter(p=>p.toLowerCase().includes(q));
+  contenedor.innerHTML=coincidencias.length?coincidencias.map(p=>`<button type="button" class="combo-opcion" data-p="${escapar(p)}">${escapar(p)}</button>`).join(''):'<div class="combo-vacio">Puedes usar el nombre escrito como producto nuevo.</div>';
+  contenedor.querySelectorAll('.combo-opcion').forEach(b=>b.onclick=()=>{input.value=b.dataset.p;cerrarCombos();if(input.id==='producto')setTimeout(()=>kilos.focus(),50)});
+}
+function prepararCombo(inputId,comboId,listaId){
+  const input=$(inputId),combo=$(comboId),contenedor=$(listaId);
+  const mostrar=()=>{pintarCombo(input,contenedor);abrirCombo(combo)};
+  input.addEventListener('focus',mostrar);
+  input.addEventListener('click',mostrar);
+  input.addEventListener('input',mostrar);
+  input.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'){e.preventDefault();mostrar();const primero=contenedor.querySelector('.combo-opcion');if(primero)primero.focus()}
+    if(e.key==='Escape')cerrarCombos();
+  });
+}
+function agregar(){const n=producto.value.trim(),p=Number(kilos.value);if(!n){producto.focus();return}if(!Number.isFinite(p)||p<=0){kilos.focus();return}registros.push({producto:n,kilos:p});producto.value='';kilos.value='';render();setTimeout(()=>producto.focus(),50)}
+window.editar=i=>{indiceEdicion=i;$('editarProducto').value=registros[i].producto;$('editarKilos').value=registros[i].kilos;$('modalEditar').classList.add('activo');setTimeout(()=>$('editarProducto').focus(),80)}
 window.eliminar=i=>{if(confirm('¿Eliminar este renglón?')){registros.splice(i,1);render()}}
-$('abrirProductos').onclick=()=>abrirPanel('nuevo');$('abrirProductosEditar').onclick=()=>abrirPanel('edicion');$('cerrarProductos').onclick=cerrarPanel;$('panelProductos').onclick=e=>{if(e.target===$('panelProductos'))cerrarPanel()};$('buscarProducto').oninput=e=>pintarProductos(e.target.value);$('usarOtro').onclick=()=>{const n=$('otroProducto').value.trim();if(n)seleccionar(n)};$('otroProducto').onkeydown=e=>{if(e.key==='Enter')$('usarOtro').click()};
-$('btnAgregar').onclick=agregar;kilos.onkeydown=e=>{if(e.key==='Enter')agregar()};cliente.oninput=guardar;pesoInicial.oninput=guardar;fecha.onchange=cargar;
+prepararCombo('producto','comboNuevo','listaProductos');prepararCombo('editarProducto','comboEditar','listaProductosEditar');document.addEventListener('click',e=>{if(!e.target.closest('.combo'))cerrarCombos()});
+$('btnAgregar').onclick=agregar;producto.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();cerrarCombos();kilos.focus()}};kilos.onkeydown=e=>{if(e.key==='Enter')agregar()};cliente.oninput=guardar;pesoInicial.oninput=guardar;fecha.onchange=cargar;
 $('cancelarEdicion').onclick=()=>$('modalEditar').classList.remove('activo');$('guardarEdicion').onclick=()=>{const n=$('editarProducto').value.trim(),p=Number($('editarKilos').value);if(!n||!Number.isFinite(p)||p<=0)return;registros[indiceEdicion]={producto:n,kilos:p};$('modalEditar').classList.remove('activo');render()};$('modalEditar').onclick=e=>{if(e.target===$('modalEditar'))$('modalEditar').classList.remove('activo')};
 $('btnCSV').onclick=()=>{if(!registros.length){alert('No hay registros para exportar.');return}const filas=[['Fecha',fecha.value],['Cliente',cliente.value.trim()],['Peso inicial',pesoInicial.value],[],['Producto','Kilos'],...registros.map(r=>[r.producto,Number(r.kilos).toFixed(3)]),[],['Total',registros.reduce((s,r)=>s+Number(r.kilos),0).toFixed(3)]];const csv=filas.map(f=>f.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');const b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='despiece_'+fecha.value+'.csv';a.click();URL.revokeObjectURL(u)};
 $('btnWhatsApp').onclick=()=>{const total=registros.reduce((s,r)=>s+Number(r.kilos),0);const l=['*DESPIECE DE CERDO*','Fecha: '+fecha.value,cliente.value.trim()?'Cliente: '+cliente.value.trim():'',pesoInicial.value?'Peso inicial: '+Number(pesoInicial.value).toFixed(3)+' kg':'','',...registros.map((r,i)=>`${i+1}. ${r.producto}: ${Number(r.kilos).toFixed(3)} kg`),'',`*TOTAL: ${total.toFixed(3)} kg*`].filter(Boolean);window.open('https://wa.me/?text='+encodeURIComponent(l.join('\n')),'_blank')};
